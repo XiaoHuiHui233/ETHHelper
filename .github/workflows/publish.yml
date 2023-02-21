@@ -1,0 +1,41 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Prepare Poetry
+      uses: abatilo/actions-poetry@v2.1.6
+      with:
+        poetry-version: "1.3.2"
+    - name: Run build
+      run: poetry build
+    - name: Show version
+      id: show_version
+      run:  echo "PACKAGE_VERSION=$(poetry version | cut -d" " -f 2)" >> $GITHUB_OUTPUT
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.show_version.outputs.PACKAGE_VERSION }}
+        draft: false
+        prerelease: false
+    - name: Upload Release Assets
+      uses: dwenegar/upload-release-assets@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
+        assets_path: dist
