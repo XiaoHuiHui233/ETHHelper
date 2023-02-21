@@ -1,0 +1,5 @@
+v0.1.0
+
+First commit
+Implemented the HTTP interfaces of the txpool and net namespaces of Geth node
+Partially implements the HTTP interface of the eth namespace (50%)

@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "ethhelper"
+version = "0.1.0"
+description = "A Geth data picker with type support for Ethereum"
+authors = ["XiaoHuiHui233 <1025184872@qq.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+httpx = "^0.23.3"
+web3 = "^6.0.0-beta.10"
+eth-typing = "^3"
+pydantic = "^1.10.5"
+orjson = "^3.8.6"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+flake8 = "^6.0.0"
+yapf = "^0.32.0"
+mypy = "^1.0.0"
+pytest-asyncio = "^0.20.3"
+python-dotenv = "^0.21.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
