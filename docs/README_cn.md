@@ -11,7 +11,7 @@
 指令如下：
 
 ```bash
-poetry add git+ssh://git@github.com:Mathlab-Crypto/ETHHelper.git
+poetry add git+ssh://git@github.com:XiaoHuiHui233/ETHHelper.git
 ```
 
 ## 构建
@@ -24,6 +24,6 @@ poetry add git+ssh://git@github.com:Mathlab-Crypto/ETHHelper.git
 poetry build
 ```
 
-## 作者
+## 作者和版权
 
-XiaoHuiHui233
+ETHHelper由[XiaoHuiHui233](https://github.com/XiaoHuiHui233/)开发，使用Apache2.0开源协议。

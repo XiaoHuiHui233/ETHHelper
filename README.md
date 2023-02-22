@@ -11,7 +11,7 @@ The project is managed by poetry. You can use poetry to directly add a reference
 The command is as follow:
 
 ```bash
-poetry add git+ssh://git@github.com:Mathlab-Crypto/ETHHelper.git
+poetry add git+ssh://git@github.com:XiaoHuiHui233/ETHHelper.git
 ```
 
 ## Build
@@ -24,6 +24,6 @@ The command is as follow:
 poetry build
 ```
 
-## Author
+## Author and License
 
-XiaoHuiHui233
+ETHHelper was written by [XiaoHuiHui233](https://github.com/XiaoHuiHui233/), licensed under the Apache 2.0.
