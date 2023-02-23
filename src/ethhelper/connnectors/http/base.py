@@ -7,22 +7,11 @@ from httpx import AsyncClient
 from pydantic import ValidationError
 from web3 import AsyncHTTPProvider, Web3
 
-from ...datatypes.geth import (GethErrorDetail, GethErrorResponse, GethRequest,
-                               GethSuccessResponse)
+from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
+                               GethSuccessResponse, IdNotMatch)
 from ...utils import log
 
 logger = log.get_logger(__name__, "./logs/connectors/http.log", False)
-
-
-class IdNotMatch(Exception):
-    pass
-
-
-class GethError(Exception):
-    def __init__(self, error: GethErrorDetail) -> None:
-        self.code = error.code
-        self.msg = error.message
-        super().__init__(f"{error.code}: {error.message}")
 
 
 class GethHttpAbstract(metaclass=ABCMeta):

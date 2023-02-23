@@ -7,7 +7,7 @@ from web3.types import ENS, Nonce
 from web3.types import TxParams as Web3TxParams
 
 from ..utils import convert, json
-from ..utils.stdtype import HexBytes
+from ..utils.stdtype import HexBytes, IntStr
 from .base import AccessList, Address, Gas, Hash32, Wei
 
 
@@ -130,6 +130,38 @@ class Transaction(BaseModel):
     int_val = convert.int_validator(
         "block_number", "gas", "gas_price", "max_fee_per_gas", "v",
         "max_priority_fee_per_gas", "nonce", "value", "type", "chain_id"
+    )
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        frozen = True
+        json_loads = orjson.loads
+        json_dumps = json.orjson_dumps
+
+
+class BlockHeader(BaseModel):
+    difficulty: IntStr
+    extra_data: HexBytes = Field(alias="extraData")
+    gas_limit: Gas = Field(alias="gasLimit")
+    gas_used: Gas = Field(alias="gasUsed")
+    base_fee_per_gas: Wei = Field(alias="baseFeePerGas")
+    logs_bloom: HexBytes = Field(alias="logsBloom")
+    miner: Address
+    nonce: HexBytes
+    number: BlockNumber
+    parent_hash: Hash32 = Field(alias="parentHash")
+    hash: Hash32
+    mix_hash: Hash32 = Field(alias="mixHash")
+    receipts_root: HexBytes = Field(alias="receiptsRoot")
+    sha3_uncles: HexBytes = Field(alias="sha3Uncles")
+    state_root: HexBytes = Field(alias="stateRoot")
+    timestamp: int
+    transactions_root: HexBytes = Field(alias="transactionsRoot")
+    # vaildators
+    int_val = convert.int_validator(
+        "difficulty", "gas_limit", "gas_used", "base_fee_per_gas", "number",
+        "timestamp"
     )
 
     class Config:
