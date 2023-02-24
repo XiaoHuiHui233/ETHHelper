@@ -13,8 +13,8 @@ from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
 
 
 class GethHttpAbstract(metaclass=ABCMeta):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        self.url = f"http://{host}:{port}/"
+    def __init__(self, url: str, logger: Logger) -> None:
+        self.url = url
         self.logger = logger
 
     @abc.abstractmethod
@@ -23,8 +23,8 @@ class GethHttpAbstract(metaclass=ABCMeta):
 
 
 class GethHttpCustomized(GethHttpAbstract):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        super().__init__(host, port, logger)
+    def __init__(self, url: str, logger: Logger) -> None:
+        super().__init__(url, logger)
         self.id = 0
 
     async def send(self, method: str, params: list[Any] | None = None) -> Any:
@@ -68,8 +68,8 @@ class GethHttpCustomized(GethHttpAbstract):
 
 
 class GethHttpWeb3(GethHttpAbstract):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        super().__init__(host, port, logger)
+    def __init__(self, url: str, logger: Logger) -> None:
+        super().__init__(url, logger)
         self.w3 = Web3(AsyncHTTPProvider(self.url))
 
     async def is_connected(self) -> bool:

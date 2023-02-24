@@ -7,8 +7,8 @@ from .base import GethHttpWeb3
 
 
 class GethNetHttp(GethHttpWeb3):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        super().__init__(host, port, logger)
+    def __init__(self, url: str, logger: Logger) -> None:
+        super().__init__(url, logger)
         self.net = typing.cast(AsyncNet, self.w3.net)
 
     async def net_listening(self) -> bool:

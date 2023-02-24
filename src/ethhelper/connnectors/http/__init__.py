@@ -7,8 +7,8 @@ from .txpool import GethTxpoolHttp
 
 
 class GethHttpConnector(GethEthHttp, GethNetHttp, GethTxpoolHttp):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        super().__init__(host, port, logger)
+    def __init__(self, url: str, logger: Logger) -> None:
+        super().__init__(url, logger)
 
     async def test_connection(self) -> bool:
         try:
