@@ -13,6 +13,9 @@ class IntStr:
             return str(self.value)
         return self.value
 
+    def __str__(self) -> str:
+        return str(self.value)
+
     @classmethod
     def __get_validators__(cls) -> Any:
         yield cls.validate
@@ -41,7 +44,7 @@ class HexBytes:
         else:
             self.value = value
 
-    def to_str(self) -> str:
+    def __str__(self) -> str:
         return f"0x{self.value.hex()}"
 
     @classmethod

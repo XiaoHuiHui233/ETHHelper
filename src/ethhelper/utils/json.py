@@ -11,7 +11,7 @@ def encode_my_class(v: Any) -> Any:
     if isinstance(v, IntStr):
         return v.to_int_or_str()
     elif isinstance(v, HexBytes):
-        return v.to_str()
+        return str(v)
     raise TypeError
 
 
