@@ -1,3 +1,12 @@
+v0.1.5
+
+Removed log utils
+Changed the way to get logger
+Made all test infomation show in logs
+Fixed a bug when websocket is close the task is not safely closed
+Updated eth-keyfile from 0.6.0 to new release 0.6.1
+
+-------------------------------------------------------------------------------
 v0.1.4
 
 Added Websocket new block subscribe

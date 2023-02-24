@@ -1,4 +1,5 @@
 import typing
+from logging import Logger
 
 from web3.net import AsyncNet
 
@@ -6,8 +7,8 @@ from .base import GethHttpWeb3
 
 
 class GethNetHttp(GethHttpWeb3):
-    def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
+        super().__init__(host, port, logger)
         self.net = typing.cast(AsyncNet, self.w3.net)
 
     async def net_listening(self) -> bool:

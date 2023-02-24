@@ -3,7 +3,8 @@ import abc
 import asyncio
 import traceback
 from abc import ABCMeta
-from asyncio import Task
+from asyncio import CancelledError, Task
+from logging import Logger
 from typing import Any
 
 from pydantic import ValidationError
@@ -11,20 +12,18 @@ from websockets import client
 
 from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
                                GethSuccessResponse, GethWSResponse)
-from ...utils import log
-
-logger = log.get_logger(__name__, "./logs/connectors/ws.log", False)
 
 
 class GethSubsriber(metaclass=ABCMeta):
-    def __init__(self, host: str, port: int) -> None:
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
         self.url = f"ws://{host}:{port}/"
+        self.logger = logger
         self.run_task: Task[None] | None = None
         self.closed = False
 
     async def bind(self) -> None:
         if self.closed:
-            logger.error("Cant rebind closed subsriber!")
+            self.logger.error("Cant rebind closed subsriber!")
             raise ValueError("Cant rebind closed subsriber!")
         self.run_task = asyncio.create_task(self.run())
 
@@ -37,14 +36,16 @@ class GethSubsriber(metaclass=ABCMeta):
                     await self.after_connection()
                     await recieve_task
             except Exception:
-                logger.warning("Websocket connection is dead. Retry is 5s.")
-                logger.debug(f"Details: {traceback.format_exc()}")
+                self.logger.warning(
+                    "Websocket connection is dead. Retry is 5s."
+                )
+                self.logger.debug(f"Details: {traceback.format_exc()}")
                 await asyncio.sleep(5)
 
     async def send(self, method: str, params: list[Any]) -> int:
         self.id += 1
         data = GethRequest(id=self.id, method=method, params=params).json()
-        logger.debug(f"SEND {data}")
+        self.logger.debug(f"SEND {data}")
         await self.ws.send(data)
         return self.id
 
@@ -52,7 +53,7 @@ class GethSubsriber(metaclass=ABCMeta):
         async for data in self.ws:
             if isinstance(data, bytes):
                 data = data.decode()
-            logger.debug(f"RECV {data}")
+            self.logger.debug(f"RECV {data}")
             try:
                 response = GethWSResponse.parse_raw(data)
             except ValidationError:
@@ -82,4 +83,7 @@ class GethSubsriber(metaclass=ABCMeta):
             return
         await self.ws.close()
         self.run_task.cancel()
-        await asyncio.sleep(0)
+        try:
+            await self.run_task
+        except CancelledError:
+            pass

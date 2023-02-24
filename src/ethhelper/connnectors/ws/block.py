@@ -1,4 +1,5 @@
 import abc
+from logging import Logger
 
 from ...datatypes.eth import BlockHeader
 from ...datatypes.geth import (GethSuccessResponse, GethWSResponse,
@@ -7,8 +8,8 @@ from .base import GethSubsriber
 
 
 class GethNewBlockSubsriber(GethSubsriber):
-    def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
+        super().__init__(host, port, logger)
         self.wait_first = True
 
     async def subscribe_new_block(self) -> None:

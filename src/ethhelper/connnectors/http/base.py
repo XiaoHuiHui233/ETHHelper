@@ -1,6 +1,7 @@
 import abc
 import traceback
 from abc import ABCMeta
+from logging import Logger
 from typing import Any
 
 from httpx import AsyncClient
@@ -9,14 +10,12 @@ from web3 import AsyncHTTPProvider, Web3
 
 from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
                                GethSuccessResponse, IdNotMatch)
-from ...utils import log
-
-logger = log.get_logger(__name__, "./logs/connectors/http.log", False)
 
 
 class GethHttpAbstract(metaclass=ABCMeta):
-    def __init__(self, host: str, port: int) -> None:
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
         self.url = f"http://{host}:{port}/"
+        self.logger = logger
 
     @abc.abstractmethod
     async def is_connected(self) -> bool:
@@ -24,14 +23,14 @@ class GethHttpAbstract(metaclass=ABCMeta):
 
 
 class GethHttpCustomized(GethHttpAbstract):
-    def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
+        super().__init__(host, port, logger)
         self.id = 0
 
     async def send(self, method: str, params: list[Any] | None = None) -> Any:
         if params is None:
             params = []
-        logger.debug(f"SEND {method} {params}")
+        self.logger.debug(f"SEND {method} {params}")
         if self.id >= 100000000:
             self.id = 0
         self.id += 1
@@ -43,7 +42,7 @@ class GethHttpCustomized(GethHttpAbstract):
                 content=request.json(),
                 headers={"Content-Type": "application/json"}
             )
-            logger.debug(f"RECV {res.text}")
+            self.logger.debug(f"RECV {res.text}")
             try:
                 response = GethSuccessResponse.parse_raw(res.text)
                 if id != response.id:
@@ -58,25 +57,25 @@ class GethHttpCustomized(GethHttpAbstract):
     async def is_connected(self) -> bool:
         try:
             await self.send("net_version")
-            logger.info("GethHttpCustomized is good for connection.")
+            self.logger.info("GethHttpCustomized is good for connection.")
             return True
         except Exception:
-            logger.warning(
+            self.logger.warning(
                 f"GethHttpCustomized cannot connect to {self.url}."
             )
-            logger.debug(f"Detail: {traceback.format_exc()}")
+            self.logger.debug(f"Detail: {traceback.format_exc()}")
             return False
 
 
 class GethHttpWeb3(GethHttpAbstract):
-    def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
+        super().__init__(host, port, logger)
         self.w3 = Web3(AsyncHTTPProvider(self.url))
 
     async def is_connected(self) -> bool:
         connected = self.w3.is_connected()
         if isinstance(connected, bool):
-            logger.fatal("GethHttpWeb3 is not running in asyncio!")
+            self.logger.fatal("GethHttpWeb3 is not running in asyncio!")
             raise NotImplementedError(
                 "GethHttpWeb3 is not running in asyncio!"
             )

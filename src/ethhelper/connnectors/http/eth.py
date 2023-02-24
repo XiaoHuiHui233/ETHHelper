@@ -1,4 +1,5 @@
 import typing
+from logging import Logger
 
 from eth_typing import Address as Web3Address
 from eth_typing import BlockNumber
@@ -17,8 +18,8 @@ from .base import GethHttpWeb3
 
 
 class GethEthHttp(GethHttpWeb3):
-    def __init__(self, host: str, port: int) -> None:
-        super().__init__(host, port)
+    def __init__(self, host: str, port: int, logger: Logger) -> None:
+        super().__init__(host, port, logger)
         self.eth = typing.cast(AsyncEth, self.w3.eth)
 
     async def eth_accounts(self) -> list[Address]:

@@ -1,5 +1,7 @@
+import logging
 import os
 import random
+from logging import FileHandler, Formatter
 
 import dotenv
 import pytest
@@ -9,24 +11,27 @@ from ethhelper.connnectors.http import GethHttpConnector
 
 dotenv.load_dotenv()
 
+logger = logging.getLogger(__name__)
+fmt = Formatter("%(asctime)s [%(name)s][%(levelname)s] %(message)s")
+fh = FileHandler(f"./logs/{__name__}", "w", encoding="utf-8")
+fh.setFormatter(fmt)
+fh.setLevel(logging.DEBUG)
+logger.addHandler(fh)
+logger.setLevel(logging.INFO)
 
 connector = GethHttpConnector(
-    os.getenv("HOST", "localhost"), int(os.getenv("PORT", "8545"))
+    os.getenv("HOST", "localhost"), int(os.getenv("PORT", "8545")), logger
 )
 
 
 @pytest.mark.asyncio
 class TestHttpTxpool:
     async def test_case1(self) -> None:
-        inspect = await connector.txpool_inspect()
-        with open("./tmp/txpool_inspect.json", "w") as wf:
-            wf.write(inspect.json())
+        _ = await connector.txpool_inspect()
 
     async def test_case2(self) -> None:
         for _ in range(10):
-            content = await connector.txpool_content()
-            with open("./tmp/txpool_content.json", "w") as wf:
-                wf.write(content.json())
+            _ = await connector.txpool_content()
 
     async def test_case3(self) -> None:
         for _ in range(20):
@@ -35,5 +40,3 @@ class TestHttpTxpool:
                 list(content.queued.keys()), 1
             )
             content = await connector.txpool_content_from(keys[0])
-            with open("./tmp/txpool_content_from.json", "w") as wf:
-                wf.write(content.json())
