@@ -18,8 +18,8 @@ from .base import GethHttpWeb3
 
 
 class GethEthHttp(GethHttpWeb3):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        super().__init__(host, port, logger)
+    def __init__(self, url: str, logger: Logger) -> None:
+        super().__init__(url, logger)
         self.eth = typing.cast(AsyncEth, self.w3.eth)
 
     async def eth_accounts(self) -> list[Address]:

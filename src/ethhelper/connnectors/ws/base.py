@@ -15,8 +15,8 @@ from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
 
 
 class GethSubsriber(metaclass=ABCMeta):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        self.url = f"ws://{host}:{port}/"
+    def __init__(self, url: str, logger: Logger) -> None:
+        self.url = url
         self.logger = logger
         self.run_task: Task[None] | None = None
         self.closed = False

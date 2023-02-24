@@ -1,6 +1,7 @@
 import logging
 import os
 from logging import FileHandler, Formatter
+
 import dotenv
 # import orjson
 import pytest
@@ -27,9 +28,9 @@ fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 logger.setLevel(logging.DEBUG)
 
-connector = GethHttpConnector(
-    os.getenv("HOST", "localhost"), int(os.getenv("PORT", "8545")), logger
-)
+host = os.getenv("HOST", "localhost")
+port = int(os.getenv("PORT", "8545"))
+connector = GethHttpConnector(f"http://{host}:{port}/", logger)
 
 
 @pytest.mark.asyncio
@@ -91,7 +92,7 @@ class TestHttpEth:
             CallOverrideParams(balance=Wei(0), nonce=Nonce(0))  # type: ignore
         }
         result = await connector.eth_call(txn, state_override=over)
-        logger.info(f"{result.value}, {result.to_str()}")
+        logger.info(f"{result.value}, {result}")
 
     async def test_case6(self) -> None:
         txn = TxParams(  # type: ignore
@@ -111,7 +112,7 @@ class TestHttpEth:
             )
         }
         result = await connector.eth_call(txn, state_override=over)
-        logger.info(f"{result.value}, {result.to_str()}")
+        logger.info(f"{result.value}, {result}")
 
     async def test_case7(self) -> None:
         # with open("./tmp/UniswapV3Pool.json", "r") as rf:
@@ -142,4 +143,4 @@ class TestHttpEth:
             data=HexBytes("0x3850c7bd"),
             to=Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
         )
-        logger.info((await connector.eth_call(txn)).to_str())
+        logger.info(await connector.eth_call(txn))

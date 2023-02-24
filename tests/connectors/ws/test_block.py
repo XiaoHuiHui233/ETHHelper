@@ -21,8 +21,8 @@ logger.setLevel(logging.DEBUG)
 
 
 class MySubscriber(GethNewBlockSubsriber):
-    def __init__(self, host: str, port: int, logger: Logger) -> None:
-        super().__init__(host, port, logger)
+    def __init__(self, url: str, logger: Logger) -> None:
+        super().__init__(url, logger)
 
     async def on_block(self, block: BlockHeader) -> None:
         self.logger.info(f"new block {block.number}")
@@ -31,11 +31,9 @@ class MySubscriber(GethNewBlockSubsriber):
 @pytest.mark.asyncio
 class TestHttpBase:
     async def test_case1(self) -> None:
-        subscriber = MySubscriber(
-            os.getenv("HOST", "localhost"),
-            int(os.getenv("WS_PORT", "8546")),
-            logger
-        )
+        host = os.getenv("HOST", "localhost")
+        port = int(os.getenv("wS_PORT", "8546"))
+        subscriber = MySubscriber(f"ws://{host}:{port}/", logger)
         await subscriber.bind()
         await asyncio.sleep(24)
         await subscriber.close()

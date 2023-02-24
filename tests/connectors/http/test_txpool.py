@@ -19,9 +19,9 @@ fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 logger.setLevel(logging.INFO)
 
-connector = GethHttpConnector(
-    os.getenv("HOST", "localhost"), int(os.getenv("PORT", "8545")), logger
-)
+host = os.getenv("HOST", "localhost")
+port = int(os.getenv("PORT", "8545"))
+connector = GethHttpConnector(f"http://{host}:{port}/", logger)
 
 
 @pytest.mark.asyncio
