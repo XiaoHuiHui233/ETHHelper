@@ -2,7 +2,10 @@ from typing import Any
 
 
 class IntStr:
-    def __init__(self, value: str | int) -> None:
+    def __init__(self, value: str | int | "IntStr") -> None:
+        if isinstance(value, IntStr):
+            self.value = value.value
+            return
         self.value = int(value, 0) if isinstance(value, str) else value
 
     def to_int_or_str(self) -> int | str:
@@ -24,7 +27,10 @@ class IntStr:
 
 
 class HexBytes:
-    def __init__(self, value: str | bytes) -> None:
+    def __init__(self, value: str | bytes | "HexBytes") -> None:
+        if isinstance(value, HexBytes):
+            self.value = value.value
+            return
         if isinstance(value, str):
             if not value.startswith("0x"):
                 raise ValueError("HexBytes should start with 0x.")

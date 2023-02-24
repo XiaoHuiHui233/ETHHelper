@@ -1,3 +1,8 @@
+v0.1.6
+
+Allowed HexBytes and IntStr be inited by duper
+
+-------------------------------------------------------------------------------
 v0.1.5
 
 Removed log utils
