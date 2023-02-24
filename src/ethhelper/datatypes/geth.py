@@ -132,7 +132,7 @@ class CallOverrideParams(BaseModel):
                 8, "big", signed=False
             ).hex()
         if "code" in td:
-            td["code"] = typing.cast(HexBytes, td["code"]).to_str()
+            td["code"] = str(typing.cast(HexBytes, td["code"]))
 
     def to_web3(self) -> Web3CallOverrideParams:
         td = self.dict(by_alias=True, exclude_none=True)

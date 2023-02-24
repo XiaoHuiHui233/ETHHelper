@@ -57,25 +57,6 @@ class TxParams(BaseModel):
     type: int | None = None
     value: Wei | None = None
 
-    # @root_validator()
-    # def check(cls, v: "TxParams", **kwargs: Any) -> "TxParams":
-    #     match(v.type):
-    #         case [0, 1]:
-    #             if v.gas_price is None:
-    #                 raise ValueError(
-    #                     f"gas_price cant be None when type is {v.type}"
-    #                 )
-    #         case 2:
-    #             if v.max_fee_per_gas is None or \
-    #                     v.max_priority_fee_per_gas is None:
-    #                 raise ValueError(
-    #                     "max_fee_per_gas or max_priority_fee_per_gas cant "
-    #                     f"be None when type is {v.type}"
-    #                 )
-    #         case _:
-    #             raise ValueError(f"Unsupport transaction type: {v.type}")
-    #     return v
-
     def to_web3(self) -> Web3TxParams:
         td = self.dict(by_alias=True, exclude_none=True)
         if isinstance(td["to"], Address):
@@ -99,7 +80,6 @@ class TxParams(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        frozen = True
         json_loads = orjson.loads
         json_dumps = json.orjson_dumps
 
