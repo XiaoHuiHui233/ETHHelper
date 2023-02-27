@@ -120,20 +120,6 @@ class CallOverrideParams(BaseModel):
     state_diff: dict[ChecksumAddress, dict[str, Any]] | None = \
         Field(None, alias="stateDiff")
 
-    def to_hex(self) -> Any:
-        td = self.dict(by_alias=True, exclude_none=True)
-        if "balance" in td:
-            td["balance"] = "0x" + \
-                typing.cast(Wei, td["balance"]).value.to_bytes(
-                    32, "big", signed=False
-                ).hex()
-        if "nonce" in td:
-            td["nonce"] = typing.cast(Nonce, td["nonce"]).to_bytes(
-                8, "big", signed=False
-            ).hex()
-        if "code" in td:
-            td["code"] = str(typing.cast(HexBytes, td["code"]))
-
     def to_web3(self) -> Web3CallOverrideParams:
         td = self.dict(by_alias=True, exclude_none=True)
         if "balance" in td:

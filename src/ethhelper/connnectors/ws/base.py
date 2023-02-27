@@ -54,6 +54,7 @@ class GethSubsriber(metaclass=ABCMeta):
             if isinstance(data, bytes):
                 data = data.decode()
             self.logger.debug(f"RECV {data}")
+            response: GethWSResponse | GethSuccessResponse | GethErrorResponse
             try:
                 response = GethWSResponse.parse_raw(data)
             except ValidationError:

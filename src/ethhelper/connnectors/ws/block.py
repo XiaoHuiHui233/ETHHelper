@@ -1,7 +1,7 @@
 import abc
 from logging import Logger
 
-from ...datatypes.eth import BlockHeader
+from ...datatypes.eth import Block
 from ...datatypes.geth import (GethSuccessResponse, GethWSResponse,
                                NoSubscribeToken)
 from .base import GethSubsriber
@@ -31,10 +31,10 @@ class GethNewBlockSubsriber(GethSubsriber):
         if not isinstance(data, GethWSResponse):
             await self.on_other(data)
             return
-        await self.on_block(BlockHeader.parse_obj(data.params.result))
+        await self.on_block(Block.parse_obj(data.params.result))
 
     @abc.abstractmethod
-    async def on_block(self, block: BlockHeader) -> None:
+    async def on_block(self, block: Block) -> None:
         raise NotImplementedError
 
     async def on_other(self, data: GethSuccessResponse) -> None:

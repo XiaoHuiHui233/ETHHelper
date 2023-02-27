@@ -1,12 +1,22 @@
+# pyright: reportUnnecessaryIsInstance=false
 from typing import Any
+
+from hexbytes import HexBytes as W3HexBytes
 
 
 class IntStr:
     def __init__(self, value: "str | int | IntStr") -> None:
+        self.value: int
         if isinstance(value, IntStr):
             self.value = value.value
-            return
-        self.value = int(value, 0) if isinstance(value, str) else value
+        elif isinstance(value, int):
+            self.value = value
+        elif isinstance(value, str):
+            self.value = int(value, 0)
+        else:
+            raise TypeError(
+                "The value type should be str or int or IntStr!"
+            )
 
     def to_int_or_str(self) -> int | str:
         if self.value.bit_length() >= 64:
@@ -31,10 +41,14 @@ class IntStr:
 
 class HexBytes:
     def __init__(self, value: "str | bytes | HexBytes") -> None:
+        self.value: bytes
         if isinstance(value, HexBytes):
             self.value = value.value
-            return
-        if isinstance(value, str):
+        elif isinstance(value, W3HexBytes):
+            self.value = bytes(value)
+        elif isinstance(value, bytes):
+            self.value = value
+        elif isinstance(value, str):
             if not value.startswith("0x"):
                 raise ValueError("HexBytes should start with 0x.")
             hex_str = value[2:]
@@ -42,7 +56,9 @@ class HexBytes:
                 hex_str = f"0{hex_str}"
             self.value = bytes.fromhex(hex_str)
         else:
-            self.value = value
+            raise TypeError(
+                "The value type should be str or bytes or HexBytes!"
+            )
 
     def __str__(self) -> str:
         return f"0x{self.value.hex()}"

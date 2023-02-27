@@ -7,7 +7,7 @@ import dotenv
 import pytest
 
 from ethhelper.connnectors.ws.block import GethNewBlockSubsriber
-from ethhelper.datatypes.eth import BlockHeader
+from ethhelper.datatypes.eth import Block
 
 dotenv.load_dotenv()
 
@@ -24,8 +24,9 @@ class MySubscriber(GethNewBlockSubsriber):
     def __init__(self, url: str, logger: Logger) -> None:
         super().__init__(url, logger)
 
-    async def on_block(self, block: BlockHeader) -> None:
-        self.logger.info(f"new block {block.number}")
+    async def on_block(self, block: Block) -> None:
+        self.logger.info(f"new block {block}")
+        self.logger.info(f"new block number {block.number}")
 
 
 @pytest.mark.asyncio

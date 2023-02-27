@@ -1,9 +1,7 @@
-import typing
 from logging import Logger
 
 from eth_typing import Address as Web3Address
 from eth_typing import BlockNumber
-from web3.eth.async_eth import AsyncEth
 from web3.types import ENS
 from web3.types import BlockIdentifier as Web3BlockIdentifier
 from web3.types import BlockParams
@@ -11,7 +9,8 @@ from web3.types import CallOverride as Web3CallOverride
 from web3.types import Nonce
 
 from ...datatypes.base import Address, BlockIdentifier, Gas, Hash32, Wei
-from ...datatypes.eth import FeeHistory, SyncStatus, Transaction, TxParams
+from ...datatypes.eth import (Block, FeeHistory, Receipt, SyncStatus,
+                              Transaction, TxParams)
 from ...datatypes.geth import CallOverride
 from ...utils.stdtype import HexBytes
 from .base import GethHttpWeb3
@@ -20,7 +19,7 @@ from .base import GethHttpWeb3
 class GethEthHttp(GethHttpWeb3):
     def __init__(self, url: str, logger: Logger) -> None:
         super().__init__(url, logger)
-        self.eth = typing.cast(AsyncEth, self.w3.eth)
+        self.eth = self.w3.eth
 
     async def eth_accounts(self) -> list[Address]:
         return [Address(addr) for addr in await self.eth.accounts]
@@ -78,7 +77,7 @@ class GethEthHttp(GethHttpWeb3):
         block_id = self._block_id_transfer(block_identifier)
         state_over: Web3CallOverride = {}
         for addr in state_override:
-            state_over[addr] = state_override[addr].to_hex()
+            state_over[addr] = state_override[addr].to_web3()
         return HexBytes(
             (
                 await self.eth.call(
@@ -145,21 +144,6 @@ class GethEthHttp(GethHttpWeb3):
             await self.eth.send_transaction(transaction.to_web3())
         )
 
-    async def eth_send_raw_transaction(
-        self, transaction: HexBytes
-     ) -> HexBytes:
-        return HexBytes(
-            await self.eth.send_raw_transaction(transaction.value)
-        )
-
-    # async def eth_get_block(
-    #     self,
-    #     block_identifier: BlockIdentifier,
-    #     full_transactions: bool = False
-    # ) -> BlockData:
-    #     block_id = self._block_id_transfer(block_identifier)
-    #     return await self.eth.get_block(block_id, full_transactions)
-
     def _address_transfer(self, address: Address | ENS) -> Web3Address | ENS:
         if isinstance(address, Address):
             return address.to_web3()
@@ -183,12 +167,6 @@ class GethEthHttp(GethHttpWeb3):
         addr = self._address_transfer(account)
         return HexBytes((await self.eth.get_code(addr, block_id)).hex())
 
-    # async def eth_get_logs(
-    #     self,
-    #     filter_params: FilterParams,
-    # ) -> List[LogReceipt]:
-    #     return await self._get_logs(filter_params)
-
     async def eth_get_account_nonce(
         self,
         account: Address | ENS,
@@ -198,43 +176,70 @@ class GethEthHttp(GethHttpWeb3):
         addr = self._address_transfer(account)
         return await self.eth.get_transaction_count(addr, block_id)
 
-    # async def eth_get_transaction_receipt(self, transaction_hash: _Hash32) -> TxReceipt:
-    #     return await self._transaction_receipt(transaction_hash)
+    async def eth_get_block(
+        self,
+        block_identifier: BlockIdentifier,
+        full_transactions: bool = False
+    ) -> Block:
+        block_id = self._block_id_transfer(block_identifier)
+        return Block.parse_obj(
+            await self.eth.get_block(block_id, full_transactions)
+        )
 
-    # async def eth_wait_for_transaction_receipt(
-    #     self, transaction_hash: _Hash32, timeout: float = 120, poll_latency: float = 0.1
-    # ) -> TxReceipt:
-    #     async def _wait_for_tx_receipt_with_timeout(
-    #         _tx_hash: _Hash32, _poll_latency: float
-    #     ) -> TxReceipt:
-    #         while True:
-    #             try:
-    #                 tx_receipt = await self._transaction_receipt(_tx_hash)
-    #             except TransactionNotFound:
-    #                 tx_receipt = None
-    #             if tx_receipt is not None:
-    #                 break
-    #             await asyncio.sleep(poll_latency)
-    #         return tx_receipt
+    async def eth_get_storage_at(
+        self,
+        account: Address | ENS,
+        position: int,
+        block_identifier: BlockIdentifier = "latest",
+    ) -> HexBytes:
+        block_id = self._block_id_transfer(block_identifier)
+        addr = self._address_transfer(account)
+        return HexBytes(
+            await self.eth.get_storage_at(addr, position, block_id)
+        )
 
-    #     try:
-    #         return await asyncio.wait_for(
-    #             _wait_for_tx_receipt_with_timeout(transaction_hash, poll_latency),
-    #             timeout=timeout,
-    #         )
-    #     except asyncio.TimeoutError:
-    #         raise TimeExhausted(
-    #             f"Transaction {HexBytes(transaction_hash) !r} is not in the chain "
-    #             f"after {timeout} seconds"
-    #         )
+    async def eth_send_raw_transaction(
+        self, transaction: HexBytes
+     ) -> Hash32:
+        return Hash32(
+            await self.eth.send_raw_transaction(transaction.value)
+        )
 
-    # async def eth_get_storage_at(
+    async def eth_wait_for_transaction_receipt(
+        self,
+        transaction_hash: Hash32,
+        timeout: float = 120,
+        poll_latency: float = 0.1
+    ) -> Receipt:
+        return Receipt.parse_obj(
+            await self.eth.wait_for_transaction_receipt(
+                transaction_hash.to_web3(), timeout, poll_latency
+            )
+        )
+
+    async def eth_get_transaction_receipt(
+        self, transaction_hash: Hash32
+    ) -> Receipt:
+        return Receipt.parse_obj(
+            await self.eth.get_transaction_receipt(
+                transaction_hash.to_web3()
+            )
+        )
+
+    # async def sign(
     #     self,
     #     account: Union[Address, ChecksumAddress, ENS],
-    #     position: int,
-    #     block_identifier: Optional[BlockIdentifier] = None,
-    # ) -> HexBytes:
-    #     return await self._get_storage_at(account, position, block_identifier)
+    #     data: Union[int, bytes] = None,
+    #     hexstr: HexStr = None,
+    #     text: str = None,
+    # ) -> HexStr:
+    #     return await self._sign(account, data, hexstr, text)
+
+    # async def eth_get_logs(
+    #     self,
+    #     filter_params: FilterParams,
+    # ) -> List[LogReceipt]:
+    #     return await self._get_logs(filter_params)
 
     # async def eth_new_filter(self, params: Optional[Union[str, FilterParams, HexStr]]) -> AsyncFilter:
     #     return await self.eth.filter(params)

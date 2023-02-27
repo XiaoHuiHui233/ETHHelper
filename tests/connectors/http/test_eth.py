@@ -5,12 +5,12 @@ from logging import FileHandler, Formatter
 import dotenv
 # import orjson
 import pytest
-from eth_typing import ChecksumAddress
+from eth_typing import BlockNumber, ChecksumAddress
 from web3 import Web3
 from web3.types import Nonce
 
 from ethhelper.connnectors.http import GethHttpConnector
-from ethhelper.datatypes.base import Address, Wei
+from ethhelper.datatypes.base import Address, Hash32, Wei
 from ethhelper.datatypes.eth import TxParams
 from ethhelper.datatypes.geth import CallOverrideParams
 from ethhelper.utils.stdtype import HexBytes
@@ -82,6 +82,27 @@ class TestHttpEth:
         logger.info(f"code length {len(code.value)}")
 
     async def test_case5(self) -> None:
+        hash = Hash32(
+            "0x19e59670614c583c2043517f3f39c03"
+            "c3be788d7c402dd0c946e9d1dbafe56ee"
+        )
+        raw_txn = await connector.eth_get_raw_transaction(hash)
+        txn = await connector.eth_get_transaction(hash)
+        logger.info(raw_txn)
+        logger.info(txn)
+
+    async def test_case6(self) -> None:
+        height = BlockNumber(16716880)
+        txn_cnt = await connector.eth_get_transaction_cnt_by_block(height)
+        for i in range(txn_cnt):
+            raw_txn = \
+                await connector.eth_get_raw_transaction_by_block(height, i)
+            txn = await connector.eth_get_transaction_by_block(height, i)
+            logger.info(raw_txn)
+            logger.info(txn)
+        logger.info(f"height: {height}, cnt: {txn_cnt}")
+
+    async def test_case7(self) -> None:
         txn = TxParams(  # type: ignore
             to=Address("0x6C09Fe6aDfCb42002617683D1deAeD7536167575")
         )
@@ -94,7 +115,7 @@ class TestHttpEth:
         result = await connector.eth_call(txn, state_override=over)
         logger.info(f"{result.value}, {result}")
 
-    async def test_case6(self) -> None:
+    async def test_case8(self) -> None:
         txn = TxParams(  # type: ignore
             from_=Address(  # type: ignore
                 "0x6C09Fe6aDfCb42002617683D1deAeD7536167575"
@@ -114,33 +135,39 @@ class TestHttpEth:
         result = await connector.eth_call(txn, state_override=over)
         logger.info(f"{result.value}, {result}")
 
-    async def test_case7(self) -> None:
-        # with open("./tmp/UniswapV3Pool.json", "r") as rf:
-        #     ABI = orjson.loads("".join(rf.readlines()))["abi"]
-        # contract = connector.w3.eth.contract(
-        #     Web3.to_checksum_address(
-        #         "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"
-        #     ),
-        #     abi=ABI
-        # )
-        # txn = utils.prepare_transaction(
-        #     Web3.to_checksum_address(
-        #         "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"
-        #     ),
-        #     connector.w3,
-        #     fn_identifier=contract.functions.slot0().function_identifier,
-        #     contract_abi=contract.functions.slot0().contract_abi,
-        #     fn_abi=contract.functions.slot0().abi,
-        #     transaction={
-        #         "to": Web3.to_checksum_address(
-        #             "0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"
-        #         )
-        #     }
-        # )
-        # print(txn)
+    async def test_case9(self) -> None:
         # call get uniswap slot0
         txn = TxParams(  # type: ignore
             data=HexBytes("0x3850c7bd"),
             to=Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
         )
         logger.info(await connector.eth_call(txn))
+        logger.info(await connector.eth_estimate_gas(txn))
+
+    async def test_case10(self) -> None:
+        block_now = await connector.eth_get_block("latest", True)
+        logger.info(block_now.number)
+        block_before_the_merge = await connector.eth_get_block(
+            BlockNumber(15537392)
+        )
+        logger.info(block_before_the_merge.number)
+        block_before_eip_1559 = await connector.eth_get_block(
+            BlockNumber(12964998)
+        )
+        logger.info(block_before_eip_1559.number)
+
+    async def test_case11(self) -> None:
+        receipt = await connector.eth_wait_for_transaction_receipt(
+            Hash32(
+                "0xc5831b6a76a694ba1bec2d88ca8e4a09"
+                "7d8372187b03ca29cfb0a58bb527da7c"
+            )
+        )
+        logger.info(receipt.transaction_hash)
+        receipt = await connector.eth_get_transaction_receipt(
+            Hash32(
+                "0xc5831b6a76a694ba1bec2d88ca8e4a09"
+                "7d8372187b03ca29cfb0a58bb527da7c"
+            )
+        )
+        logger.info(receipt.transaction_hash)

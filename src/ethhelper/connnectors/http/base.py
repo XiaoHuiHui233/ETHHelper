@@ -6,7 +6,7 @@ from typing import Any
 
 from httpx import AsyncClient
 from pydantic import ValidationError
-from web3 import AsyncHTTPProvider, Web3
+from web3 import AsyncHTTPProvider, AsyncWeb3
 
 from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
                                GethSuccessResponse, IdNotMatch)
@@ -43,6 +43,7 @@ class GethHttpCustomized(GethHttpAbstract):
                 headers={"Content-Type": "application/json"}
             )
             self.logger.debug(f"RECV {res.text}")
+            response: GethSuccessResponse | GethErrorResponse
             try:
                 response = GethSuccessResponse.parse_raw(res.text)
                 if id != response.id:
@@ -70,7 +71,7 @@ class GethHttpCustomized(GethHttpAbstract):
 class GethHttpWeb3(GethHttpAbstract):
     def __init__(self, url: str, logger: Logger) -> None:
         super().__init__(url, logger)
-        self.w3 = Web3(AsyncHTTPProvider(self.url))
+        self.w3 = AsyncWeb3(AsyncHTTPProvider(self.url))
 
     async def is_connected(self) -> bool:
         connected = self.w3.is_connected()

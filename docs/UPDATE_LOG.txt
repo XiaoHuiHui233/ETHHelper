@@ -1,3 +1,11 @@
+v0.1.10
+
+Implemented more HTTP interfaces for the eth namespace (80%)
+Modified test cases to cover more information
+Added more test cases
+Updated web3 to 6.0.0b11
+
+-------------------------------------------------------------------------------
 v0.1.9
 
 Made TxParams mutable
