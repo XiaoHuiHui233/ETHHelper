@@ -1,3 +1,8 @@
+v0.1.11
+
+Added comparison and hash functions for common standard types
+
+-------------------------------------------------------------------------------
 v0.1.10
 
 Implemented more HTTP interfaces for the eth namespace (80%)

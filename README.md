@@ -1,6 +1,6 @@
 # ETHHelper
 
-Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py, Geth node and Ethereum type extension based on pydantic.
+Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py. Geth node and Ethereum type extension based on pydantic.
 
 [Chinese](docs/README_cn.md) | English
 

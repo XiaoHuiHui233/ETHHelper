@@ -23,6 +23,33 @@ class IntStr:
             return str(self.value)
         return self.value
 
+    def __hash__(self) -> int:
+        return hash(self.value)
+
+    def __lt__(self, __o: Any) -> bool:
+        o = IntStr(__o)
+        return self.value < o.value
+
+    def __le__(self, __o: Any) -> bool:
+        o = IntStr(__o)
+        return self.value <= o.value
+
+    def __eq__(self, __o: Any) -> bool:
+        o = IntStr(__o)
+        return self.value == o.value
+
+    def __ne__(self, __o: Any) -> bool:
+        o = IntStr(__o)
+        return self.value != o.value
+
+    def __ge__(self, __o: Any) -> bool:
+        o = IntStr(__o)
+        return self.value >= o.value
+
+    def __gt__(self, __o: Any) -> bool:
+        o = IntStr(__o)
+        return self.value > o.value
+
     def __str__(self) -> str:
         return str(self.value)
 
@@ -59,6 +86,33 @@ class HexBytes:
             raise TypeError(
                 "The value type should be str or bytes or HexBytes!"
             )
+
+    def __hash__(self) -> int:
+        return hash(self.value)
+
+    def __lt__(self, __o: Any) -> bool:
+        o = HexBytes(__o)
+        return self.value < o.value
+
+    def __le__(self, __o: Any) -> bool:
+        o = HexBytes(__o)
+        return self.value <= o.value
+
+    def __eq__(self, __o: Any) -> bool:
+        o = HexBytes(__o)
+        return self.value == o.value
+
+    def __ne__(self, __o: Any) -> bool:
+        o = HexBytes(__o)
+        return self.value != o.value
+
+    def __ge__(self, __o: Any) -> bool:
+        o = HexBytes(__o)
+        return self.value >= o.value
+
+    def __gt__(self, __o: Any) -> bool:
+        o = HexBytes(__o)
+        return self.value > o.value
 
     def __str__(self) -> str:
         return f"0x{self.value.hex()}"
