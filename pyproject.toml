@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ethhelper"
-version = "0.1.11"
+version = "0.1.12"
 description = "Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py. Geth node and Ethereum type extension based on pydantic."
 authors = ["XiaoHuiHui233 <1025184872@qq.com>"]
 readme = "README.md"

@@ -21,20 +21,20 @@ class GethSubsriber(metaclass=ABCMeta):
         self.run_task: Task[None] | None = None
         self.closed = False
 
-    async def bind(self) -> None:
+    async def bind(self) -> Task[None]:
         if self.closed:
             self.logger.error("Cant rebind closed subsriber!")
             raise ValueError("Cant rebind closed subsriber!")
         self.run_task = asyncio.create_task(self.run())
+        return self.run_task
 
     async def run(self) -> None:
         while not self.closed:
             self.id = 0
             try:
                 async with client.connect(self.url) as self.ws:
-                    recieve_task = asyncio.create_task(self._recieve_loop())
                     await self.after_connection()
-                    await recieve_task
+                    await self._recieve_loop()
             except Exception:
                 self.logger.warning(
                     "Websocket connection is dead. Retry is 5s."
