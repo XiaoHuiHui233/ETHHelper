@@ -1,9 +1,13 @@
 import abc
 from logging import Logger
 
-from ...datatypes.eth import Block
-from ...datatypes.geth import (GethSuccessResponse, GethWSResponse,
-                               NoSubscribeToken)
+from ethhelper.datatypes.eth import Block
+from ethhelper.datatypes.geth import (
+    GethSuccessResponse,
+    GethWSResponse,
+    NoSubscribeToken
+)
+
 from .base import GethSubsriber
 
 

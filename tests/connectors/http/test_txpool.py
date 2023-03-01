@@ -7,7 +7,7 @@ import dotenv
 import pytest
 from eth_typing.evm import ChecksumAddress
 
-from ethhelper.connnectors.http import GethHttpConnector
+from ethhelper import GethHttpConnector
 
 dotenv.load_dotenv()
 

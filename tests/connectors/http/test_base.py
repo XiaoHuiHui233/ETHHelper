@@ -5,7 +5,7 @@ from logging import FileHandler, Formatter
 import dotenv
 import pytest
 
-from ethhelper.connnectors.http import GethHttpConnector
+from ethhelper import GethHttpConnector
 
 dotenv.load_dotenv()
 

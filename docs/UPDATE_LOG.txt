@@ -1,3 +1,10 @@
+v0.1.14
+
+Exported all types and tools
+Converted multi-level relative imports to absolute imports
+Standardized the format of isort
+
+-------------------------------------------------------------------------------
 v0.1.13
 
 Implemented full HTTP interfaces for the eth namespace (100%)

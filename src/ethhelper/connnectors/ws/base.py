@@ -10,8 +10,13 @@ from typing import Any
 from pydantic import ValidationError
 from websockets import client
 
-from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
-                               GethSuccessResponse, GethWSResponse)
+from ethhelper.datatypes.geth import (
+    GethError,
+    GethErrorResponse,
+    GethRequest,
+    GethSuccessResponse,
+    GethWSResponse
+)
 
 
 class GethSubsriber(metaclass=ABCMeta):

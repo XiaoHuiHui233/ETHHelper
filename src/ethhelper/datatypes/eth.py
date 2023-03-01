@@ -1,5 +1,5 @@
 import typing
-from typing import Sequence
+from typing import NewType, Sequence
 
 import orjson
 from eth_typing import BlockNumber
@@ -9,9 +9,24 @@ from web3.types import FilterParams as Web3FilterParams
 from web3.types import Nonce
 from web3.types import TxParams as Web3TxParams
 
-from ..utils import convert, json
-from ..utils.stdtype import HexBytes, IntStr
-from .base import AccessList, Address, BlockIdentifier, Gas, Hash32, Wei
+from ethhelper.utils import convert, json
+
+from .base import Address, BlockIdentifier, Gas, Hash32, HexBytes, IntStr, Wei
+
+
+class AccessEntry(BaseModel):
+    address: Address
+    storage_keys: list[Hash32] = Field(alias="storageKeys")
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        frozen = True
+        json_loads = orjson.loads
+        json_dumps = json.orjson_dumps
+
+
+AccessList = NewType("AccessList", Sequence[AccessEntry])
 
 
 class SyncStatus(BaseModel):

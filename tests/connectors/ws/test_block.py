@@ -6,8 +6,8 @@ from logging import FileHandler, Formatter, Logger
 import dotenv
 import pytest
 
-from ethhelper.connnectors.ws.block import GethNewBlockSubsriber
-from ethhelper.datatypes.eth import Block
+from ethhelper import GethNewBlockSubsriber
+from ethhelper.types import Block
 
 dotenv.load_dotenv()
 

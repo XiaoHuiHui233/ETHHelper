@@ -3,20 +3,21 @@ import os
 from logging import FileHandler, Formatter
 
 import dotenv
-# import orjson
 import pytest
 from eth_typing import BlockNumber, ChecksumAddress
 from web3 import Web3
 from web3.types import Nonce
 
-from ethhelper.connnectors.http import GethHttpConnector
-from ethhelper.datatypes.base import Address, Hash32, Wei
-from ethhelper.datatypes.eth import TxParams, FilterParams
-from ethhelper.datatypes.geth import CallOverrideParams
-from ethhelper.utils.stdtype import HexBytes
-
-# from web3.contract import utils
-
+from ethhelper import GethHttpConnector
+from ethhelper.types import (
+    Address,
+    CallOverrideParams,
+    FilterParams,
+    Hash32,
+    HexBytes,
+    TxParams,
+    Wei
+)
 
 dotenv.load_dotenv()
 

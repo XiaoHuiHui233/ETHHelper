@@ -8,8 +8,13 @@ from httpx import AsyncClient
 from pydantic import ValidationError
 from web3 import AsyncHTTPProvider, AsyncWeb3
 
-from ...datatypes.geth import (GethError, GethErrorResponse, GethRequest,
-                               GethSuccessResponse, IdNotMatch)
+from ethhelper.datatypes.geth import (
+    GethError,
+    GethErrorResponse,
+    GethRequest,
+    GethSuccessResponse,
+    IdNotMatch
+)
 
 
 class GethHttpAbstract(metaclass=ABCMeta):

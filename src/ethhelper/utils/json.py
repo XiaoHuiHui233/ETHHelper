@@ -2,7 +2,7 @@ from typing import Any, TypeVar
 
 import orjson
 
-from .stdtype import HexBytes, IntStr
+from ethhelper.datatypes.base import HexBytes, IntStr
 
 T = TypeVar("T", IntStr, HexBytes)
 

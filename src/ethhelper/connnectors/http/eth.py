@@ -7,12 +7,27 @@ from web3.types import ENS, BlockParams
 from web3.types import CallOverride as Web3CallOverride
 from web3.types import Nonce
 
-from ...datatypes.base import Address, BlockIdentifier, Gas, Hash32, Wei
-from ...datatypes.eth import (Block, FeeHistory, FilterParams, Log, Receipt,
-                              SyncStatus, Transaction, TxParams)
-from ...datatypes.geth import CallOverride
-from ...utils import convert
-from ...utils.stdtype import HexBytes
+from ethhelper.datatypes.base import (
+    Address,
+    BlockIdentifier,
+    Gas,
+    Hash32,
+    HexBytes,
+    Wei
+)
+from ethhelper.datatypes.eth import (
+    Block,
+    FeeHistory,
+    FilterParams,
+    Log,
+    Receipt,
+    SyncStatus,
+    Transaction,
+    TxParams
+)
+from ethhelper.datatypes.geth import CallOverride
+from ethhelper.utils import convert
+
 from .base import GethHttpWeb3
 
 

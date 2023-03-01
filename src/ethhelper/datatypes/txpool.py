@@ -5,7 +5,8 @@ from eth_typing import ChecksumAddress
 from pydantic import BaseModel
 from web3.types import Nonce
 
-from ..utils import convert, json
+from ethhelper.utils import convert, json
+
 from .base import Address, Gas, Wei
 from .eth import Transaction
 
