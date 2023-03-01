@@ -1,17 +1,17 @@
 from logging import Logger
+from typing import Literal
 
-from eth_typing import Address as Web3Address
 from eth_typing import BlockNumber
-from web3.types import ENS
-from web3.types import BlockIdentifier as Web3BlockIdentifier
-from web3.types import BlockParams
+from web3._utils.filters import AsyncFilter
+from web3.types import ENS, BlockParams
 from web3.types import CallOverride as Web3CallOverride
 from web3.types import Nonce
 
 from ...datatypes.base import Address, BlockIdentifier, Gas, Hash32, Wei
-from ...datatypes.eth import (Block, FeeHistory, Receipt, SyncStatus,
-                              Transaction, TxParams)
+from ...datatypes.eth import (Block, FeeHistory, FilterParams, Log, Receipt,
+                              SyncStatus, Transaction, TxParams)
 from ...datatypes.geth import CallOverride
+from ...utils import convert
 from ...utils.stdtype import HexBytes
 from .base import GethHttpWeb3
 
@@ -60,13 +60,6 @@ class GethEthHttp(GethHttpWeb3):
             )
         )
 
-    def _block_id_transfer(
-        self, block_identifier: BlockIdentifier
-    ) -> Web3BlockIdentifier:
-        if isinstance(block_identifier, Hash32):
-            return block_identifier.to_web3()
-        return block_identifier
-
     async def eth_call(
         self,
         transaction: TxParams,
@@ -74,7 +67,7 @@ class GethEthHttp(GethHttpWeb3):
         state_override: CallOverride = {},
         ccip_read_enabled: bool = False,
     ) -> HexBytes:
-        block_id = self._block_id_transfer(block_identifier)
+        block_id = convert.block_id_transfer(block_identifier)
         state_over: Web3CallOverride = {}
         for addr in state_override:
             state_over[addr] = state_override[addr].to_web3()
@@ -94,7 +87,7 @@ class GethEthHttp(GethHttpWeb3):
         transaction: TxParams,
         block_identifier: BlockIdentifier = "latest"
     ) -> Gas:
-        block_id = self._block_id_transfer(block_identifier)
+        block_id = convert.block_id_transfer(block_identifier)
         return Gas(
             await self.eth.estimate_gas(transaction.to_web3(), block_id)
         )
@@ -118,7 +111,7 @@ class GethEthHttp(GethHttpWeb3):
     async def eth_get_transaction_by_block(
         self, block_identifier: BlockIdentifier, index: int
     ) -> Transaction:
-        block_id = self._block_id_transfer(block_identifier)
+        block_id = convert.block_id_transfer(block_identifier)
         return Transaction.parse_obj(
             await self.eth.get_transaction_by_block(block_id, index)
         )
@@ -126,7 +119,7 @@ class GethEthHttp(GethHttpWeb3):
     async def eth_get_raw_transaction_by_block(
         self, block_identifier: BlockIdentifier, index: int
     ) -> HexBytes:
-        block_id = self._block_id_transfer(block_identifier)
+        block_id = convert.block_id_transfer(block_identifier)
         return HexBytes(
             (
                 await self.eth.get_raw_transaction_by_block(block_id, index)
@@ -136,7 +129,7 @@ class GethEthHttp(GethHttpWeb3):
     async def eth_get_transaction_cnt_by_block(
         self, block_identifier: BlockIdentifier
     ) -> int:
-        block_id = self._block_id_transfer(block_identifier)
+        block_id = convert.block_id_transfer(block_identifier)
         return await self.eth.get_block_transaction_count(block_id)
 
     async def eth_send_transaction(self, transaction: TxParams) -> HexBytes:
@@ -144,18 +137,13 @@ class GethEthHttp(GethHttpWeb3):
             await self.eth.send_transaction(transaction.to_web3())
         )
 
-    def _address_transfer(self, address: Address | ENS) -> Web3Address | ENS:
-        if isinstance(address, Address):
-            return address.to_web3()
-        return address
-
     async def eth_get_balance(
         self,
         account: Address | ENS,
         block_identifier: BlockIdentifier = "latest"
     ) -> Wei:
-        block_id = self._block_id_transfer(block_identifier)
-        addr = self._address_transfer(account)
+        block_id = convert.block_id_transfer(block_identifier)
+        addr = convert.address_transfer(account)
         return Wei(await self.eth.get_balance(addr, block_id))
 
     async def eth_get_code(
@@ -163,8 +151,8 @@ class GethEthHttp(GethHttpWeb3):
         account: Address | ENS,
         block_identifier: BlockIdentifier = "latest"
     ) -> HexBytes:
-        block_id = self._block_id_transfer(block_identifier)
-        addr = self._address_transfer(account)
+        block_id = convert.block_id_transfer(block_identifier)
+        addr = convert.address_transfer(account)
         return HexBytes((await self.eth.get_code(addr, block_id)).hex())
 
     async def eth_get_account_nonce(
@@ -172,8 +160,8 @@ class GethEthHttp(GethHttpWeb3):
         account: Address | ENS,
         block_identifier: BlockIdentifier = "latest"
     ) -> Nonce:
-        block_id = self._block_id_transfer(block_identifier)
-        addr = self._address_transfer(account)
+        block_id = convert.block_id_transfer(block_identifier)
+        addr = convert.address_transfer(account)
         return await self.eth.get_transaction_count(addr, block_id)
 
     async def eth_get_block(
@@ -181,7 +169,7 @@ class GethEthHttp(GethHttpWeb3):
         block_identifier: BlockIdentifier,
         full_transactions: bool = False
     ) -> Block:
-        block_id = self._block_id_transfer(block_identifier)
+        block_id = convert.block_id_transfer(block_identifier)
         return Block.parse_obj(
             await self.eth.get_block(block_id, full_transactions)
         )
@@ -192,8 +180,8 @@ class GethEthHttp(GethHttpWeb3):
         position: int,
         block_identifier: BlockIdentifier = "latest",
     ) -> HexBytes:
-        block_id = self._block_id_transfer(block_identifier)
-        addr = self._address_transfer(account)
+        block_id = convert.block_id_transfer(block_identifier)
+        addr = convert.address_transfer(account)
         return HexBytes(
             await self.eth.get_storage_at(addr, position, block_id)
         )
@@ -226,29 +214,26 @@ class GethEthHttp(GethHttpWeb3):
             )
         )
 
-    # async def sign(
-    #     self,
-    #     account: Union[Address, ChecksumAddress, ENS],
-    #     data: Union[int, bytes] = None,
-    #     hexstr: HexStr = None,
-    #     text: str = None,
-    # ) -> HexStr:
-    #     return await self._sign(account, data, hexstr, text)
+    async def eth_sign(
+        self, account: Address | ENS, data: HexBytes
+    ) -> HexBytes:
+        addr = convert.address_transfer(account)
+        return HexBytes(await self.eth.sign(addr, data.value))
 
-    # async def eth_get_logs(
-    #     self,
-    #     filter_params: FilterParams,
-    # ) -> List[LogReceipt]:
-    #     return await self._get_logs(filter_params)
+    async def eth_filter(
+        self, filter: Literal["latest", "pending"] | FilterParams
+    ) -> AsyncFilter:
+        if isinstance(filter, FilterParams):
+            return await self.eth.filter(filter.to_web3())
+        else:
+            return await self.eth.filter(filter)
 
-    # async def eth_new_filter(self, params: Optional[Union[str, FilterParams, HexStr]]) -> AsyncFilter:
-    #     return await self.eth.filter(params)
+    async def eth_uninstall_filter(self, filter: AsyncFilter) -> bool:
+        assert filter.filter_id is not None
+        return await self.eth.uninstall_filter(filter.filter_id)
 
-    # async def eth_get_filter_changes(self, filter_id: HexStr) -> List[LogReceipt]:
-    #     return await self._get_filter_changes(filter_id)
-
-    # async def eth_get_filter_logs(self, filter_id: HexStr) -> List[LogReceipt]:
-    #     return await self._get_filter_logs(filter_id)
-
-    # async def eth_uninstall_filter(self, filter_id: HexStr) -> bool:
-    #     return await self._uninstall_filter(filter_id)
+    async def get_logs(self, filter: FilterParams) -> list[Log]:
+        async_filter = await self.eth_filter(filter)
+        logs = await async_filter.get_all_entries()
+        await self.eth_uninstall_filter(async_filter)
+        return [Log.parse_obj(log) for log in logs]

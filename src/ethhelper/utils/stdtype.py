@@ -1,7 +1,7 @@
 # pyright: reportUnnecessaryIsInstance=false
 from typing import Any
 
-from hexbytes import HexBytes as W3HexBytes
+from hexbytes import HexBytes as Web3HexBytes
 
 
 class IntStr:
@@ -71,7 +71,7 @@ class HexBytes:
         self.value: bytes
         if isinstance(value, HexBytes):
             self.value = value.value
-        elif isinstance(value, W3HexBytes):
+        elif isinstance(value, Web3HexBytes):
             self.value = bytes(value)
         elif isinstance(value, bytes):
             self.value = value

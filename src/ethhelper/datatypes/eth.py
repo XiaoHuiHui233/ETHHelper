@@ -1,14 +1,17 @@
 import typing
+from typing import Sequence
 
 import orjson
 from eth_typing import BlockNumber
 from pydantic import BaseModel, Field
-from web3.types import ENS, Nonce
+from web3.types import ENS
+from web3.types import FilterParams as Web3FilterParams
+from web3.types import Nonce
 from web3.types import TxParams as Web3TxParams
 
 from ..utils import convert, json
 from ..utils.stdtype import HexBytes, IntStr
-from .base import AccessList, Address, Gas, Hash32, Wei
+from .base import AccessList, Address, BlockIdentifier, Gas, Hash32, Wei
 
 
 class SyncStatus(BaseModel):
@@ -210,7 +213,7 @@ class Log(BaseModel):
     """The address (20 bytes) of the account which generated this log - this
         will always be a contract account.
     """
-    topics: list[HexBytes]
+    topics: list[Hash32]
     """A list of 0-4 indexed topics (32 bytes) for the log."""
     data: HexBytes
     """Unindexed data for this log."""
@@ -251,6 +254,51 @@ class Receipt(BaseModel):
         "block_number", "cumulative_gas_used", "effective_gas_price",
         "gas_used", "status", "transaction_index", "type"
     )
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        frozen = True
+        json_loads = orjson.loads
+        json_dumps = json.orjson_dumps
+
+
+class FilterParams(BaseModel):
+    address: Address | list[Address] | None = None
+    block_hash: HexBytes | None = Field(None, alias="blockHash")
+    from_block: BlockIdentifier = Field("latest", alias="fromBlock")
+    to_block: BlockIdentifier = Field("latest", alias="toBlock")
+    topics: Sequence[Hash32 | Sequence[Hash32]] | None = None
+
+    def to_web3(self) -> Web3FilterParams:
+        td = self.dict(by_alias=True, exclude_none=True)
+        if "address" in td:
+            if isinstance(td["address"], Address):
+                td["address"] = td["address"].to_web3()
+            else:
+                td["address"] = typing.cast(list[Address], td["address"])
+                td["address"] = [addr.to_web3() for addr in td["address"]]
+        if "blockHash" in td:
+            td["blockHash"] = typing.cast(HexBytes, td["blockHash"]).value
+        if "fromBlock" in td:
+            td["fromBlock"] = convert.block_id_transfer(td["fromBlock"])
+        if "toBlock" in td:
+            td["toBlock"] = convert.block_id_transfer(td["toBlock"])
+        if "topics" in td and len(td["topics"]) != 0:
+            td["topics"] = typing.cast(
+                Sequence[Hash32 | Sequence[Hash32]], td["topics"]
+            )
+            if isinstance(td["topics"][0], Sequence):
+                td["topics"] = typing.cast(
+                    Sequence[Sequence[Hash32]], td["topics"]
+                )
+                td["topics"] = [
+                    [top2.to_web3() for top2 in top1] for top1 in td["topics"]
+                ]
+            else:
+                td["topics"] = typing.cast(Sequence[Hash32], td["topics"])
+                td["topics"] = [top.to_web3() for top in td["topics"]]
+        return typing.cast(Web3FilterParams, td)
 
     class Config:
         allow_population_by_field_name = True

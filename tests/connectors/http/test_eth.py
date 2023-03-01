@@ -11,7 +11,7 @@ from web3.types import Nonce
 
 from ethhelper.connnectors.http import GethHttpConnector
 from ethhelper.datatypes.base import Address, Hash32, Wei
-from ethhelper.datatypes.eth import TxParams
+from ethhelper.datatypes.eth import TxParams, FilterParams
 from ethhelper.datatypes.geth import CallOverrideParams
 from ethhelper.utils.stdtype import HexBytes
 
@@ -171,3 +171,15 @@ class TestHttpEth:
             )
         )
         logger.info(receipt.transaction_hash)
+
+    async def test_case12(self) -> None:
+        height = await connector.eth_block_number()
+        logs = await connector.get_logs(
+            FilterParams(  # type: ignore
+                address=Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
+                fromBlock=height-1000,
+                toBlock=height,
+            )
+        )
+        for log in logs:
+            logger.info(f"{log.block_number}, {log.log_index}")
