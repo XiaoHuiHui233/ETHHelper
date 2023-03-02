@@ -1,3 +1,6 @@
+from decimal import (
+    Decimal,
+)
 from typing import (
     Any,
     NewType,
@@ -155,3 +158,11 @@ Gas = NewType("Gas", int)
 class Wei(IntStr):
     def to_web3(self) -> Web3Wei:
         return Web3Wei(self.value)
+    
+    @classmethod
+    def from_gwei(cls, value: int) -> "Wei":
+        return cls(value * 1_000_000_000)
+
+    @classmethod
+    def from_eth(cls, value: int | float | Decimal) -> "Wei":
+        return cls(int(value * 1_000_000_000_000_000_000))

@@ -339,6 +339,5 @@ class FilterParams(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        frozen = True
         json_loads = orjson.loads
         json_dumps = json.orjson_dumps

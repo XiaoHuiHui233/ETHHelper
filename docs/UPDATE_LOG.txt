@@ -1,3 +1,10 @@
+v0.1.16
+
+Added conversion of GWei and ETH to Wei
+Made FilterParam mutable
+Fixed missing type configuration
+
+-------------------------------------------------------------------------------
 v0.1.15
 
 Updated code style
