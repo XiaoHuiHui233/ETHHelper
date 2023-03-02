@@ -1,13 +1,17 @@
-from eth_typing import HexAddress
+from eth_typing import (
+    HexAddress,
+)
 
 from ethhelper.datatypes.txpool import (
     TxpoolContent,
     TxpoolContentFrom,
     TxpoolInspect,
-    TxpoolStatus
+    TxpoolStatus,
 )
 
-from .base import GethHttpCustomized
+from .base import (
+    GethHttpCustomized,
+)
 
 
 class GethTxpoolHttp(GethHttpCustomized):

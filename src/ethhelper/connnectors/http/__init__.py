@@ -1,9 +1,17 @@
+from logging import (
+    Logger,
+)
 import traceback
-from logging import Logger
 
-from .eth import GethEthHttp
-from .net import GethNetHttp
-from .txpool import GethTxpoolHttp
+from .eth import (
+    GethEthHttp,
+)
+from .net import (
+    GethNetHttp,
+)
+from .txpool import (
+    GethTxpoolHttp,
+)
 
 
 class GethHttpConnector(GethEthHttp, GethNetHttp, GethTxpoolHttp):

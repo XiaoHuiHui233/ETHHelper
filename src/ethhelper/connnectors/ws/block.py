@@ -1,14 +1,22 @@
-import abc
-from logging import Logger
+from abc import (
+    abstractmethod,
+)
+from logging import (
+    Logger,
+)
 
-from ethhelper.datatypes.eth import Block
+from ethhelper.datatypes.eth import (
+    Block,
+)
 from ethhelper.datatypes.geth import (
     GethSuccessResponse,
     GethWSResponse,
-    NoSubscribeToken
+    NoSubscribeToken,
 )
 
-from .base import GethSubsriber
+from .base import (
+    GethSubsriber,
+)
 
 
 class GethNewBlockSubsriber(GethSubsriber):
@@ -37,7 +45,7 @@ class GethNewBlockSubsriber(GethSubsriber):
             return
         await self.on_block(Block.parse_obj(data.params.result))
 
-    @abc.abstractmethod
+    @abstractmethod
     async def on_block(self, block: Block) -> None:
         raise NotImplementedError
 

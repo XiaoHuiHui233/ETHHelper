@@ -1,13 +1,20 @@
 import logging
+from logging import (
+    FileHandler,
+    Formatter,
+)
 import os
 import random
-from logging import FileHandler, Formatter
 
 import dotenv
+from eth_typing.evm import (
+    ChecksumAddress,
+)
 import pytest
-from eth_typing.evm import ChecksumAddress
 
-from ethhelper import GethHttpConnector
+from ethhelper import (
+    GethHttpConnector,
+)
 
 dotenv.load_dotenv()
 

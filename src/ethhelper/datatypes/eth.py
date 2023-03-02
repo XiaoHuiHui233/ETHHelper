@@ -1,17 +1,38 @@
 import typing
-from typing import NewType, Sequence
+from typing import (
+    NewType,
+    Sequence,
+)
 
+from eth_typing import (
+    BlockNumber,
+)
 import orjson
-from eth_typing import BlockNumber
-from pydantic import BaseModel, Field
-from web3.types import ENS
-from web3.types import FilterParams as Web3FilterParams
-from web3.types import Nonce
-from web3.types import TxParams as Web3TxParams
+from pydantic import (
+    BaseModel,
+    Field,
+)
+from web3.types import (
+    ENS,
+    FilterParams as Web3FilterParams,
+    Nonce,
+    TxParams as Web3TxParams,
+)
 
-from ethhelper.utils import convert, json
+from ethhelper.utils import (
+    convert,
+    json,
+)
 
-from .base import Address, BlockIdentifier, Gas, Hash32, HexBytes, IntStr, Wei
+from .base import (
+    Address,
+    BlockIdentifier,
+    Gas,
+    Hash32,
+    HexBytes,
+    IntStr,
+    Wei,
+)
 
 
 class AccessEntry(BaseModel):

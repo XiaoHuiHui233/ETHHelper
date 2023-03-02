@@ -1,13 +1,21 @@
 import asyncio
 import logging
+from logging import (
+    FileHandler,
+    Formatter,
+    Logger,
+)
 import os
-from logging import FileHandler, Formatter, Logger
 
 import dotenv
 import pytest
 
-from ethhelper import GethNewBlockSubsriber
-from ethhelper.types import Block
+from ethhelper import (
+    GethNewBlockSubsriber,
+)
+from ethhelper.types import (
+    Block,
+)
 
 dotenv.load_dotenv()
 

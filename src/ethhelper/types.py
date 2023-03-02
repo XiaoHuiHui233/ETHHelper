@@ -5,7 +5,7 @@ from .datatypes.base import (
     Hash32,
     HexBytes,
     IntStr,
-    Wei
+    Wei,
 )
 from .datatypes.eth import (
     AccessEntry,
@@ -17,7 +17,7 @@ from .datatypes.eth import (
     Receipt,
     SyncStatus,
     Transaction,
-    TxParams
+    TxParams,
 )
 from .datatypes.geth import (
     CallOverride,
@@ -30,14 +30,14 @@ from .datatypes.geth import (
     GethWSItem,
     GethWSResponse,
     IdNotMatch,
-    NoSubscribeToken
+    NoSubscribeToken,
 )
 from .datatypes.txpool import (
     TxpoolContent,
     TxpoolContentFrom,
     TxpoolInspect,
     TxpoolSnapshot,
-    TxpoolStatus
+    TxpoolStatus,
 )
 
 __all__ = [

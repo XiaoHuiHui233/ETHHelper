@@ -1,9 +1,16 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "ethhelper"
-version = "0.1.14"
+version = "0.1.15"
 description = "Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py. Geth node and Ethereum type extension based on pydantic."
 authors = ["XiaoHuiHui233 <1025184872@qq.com>"]
+license = "Apache-2.0"
 readme = "README.md"
+repository = "https://github.com/XiaoHuiHui233/ETHHelper"
+keywords = ["ethereum", "asyncio", "geth", "pydantic"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -14,22 +21,63 @@ pydantic = "^1.10.5"
 orjson = "^3.8.6"
 websockets = "^10.4"
 
-
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"
-flake8 = "^6.0.0"
-yapf = "^0.32.0"
 mypy = "^1.0.0"
 pytest-asyncio = "^0.20.3"
 python-dotenv = "^0.21.1"
+ruff = "^0.0.253"
+black = "^23.1.0"
 
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff]
+line-length = 79
+extend-select = ["Q", "RUF100", "C90"]
+flake8-quotes = {inline-quotes = "double", multiline-quotes = "double"}
+mccabe = { max-complexity = 14 }
 
 [tool.pytest.ini_options]
+testpaths = "tests"
 pythonpath = ["src"]
+xfail_strict = true
+
+[tool.black]
+color = true
+line-length = 79
+target-version = ["py310"]
+skip-string-normalization = true
 
 [tool.isort]
+profile = "black"
+line_length = 79
+known_first_party = "ethhelper"
 multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 1
+honor_noqa = true
+float_to_top = true
+force_sort_within_sections = true
+use_parentheses = true
+combine_as_imports = true
+
+[tool.mypy]
+mypy_path = "src"
+python_version = "3.10"
+show_error_codes = true
+follow_imports = "silent"
+strict_optional = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+disallow_subclassing_any = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+implicit_optional = true
+
+[tool.pyright]
+include = ["src/ethhelper"]

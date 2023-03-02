@@ -1,3 +1,11 @@
+v0.1.15
+
+Updated code style
+Added more config items for linting tools
+Used black instead of yapf
+Used ruff instead of flake8
+
+-------------------------------------------------------------------------------
 v0.1.14
 
 Exported all types and tools

@@ -1,8 +1,14 @@
-from typing import Any, TypeVar
+from typing import (
+    Any,
+    TypeVar,
+)
 
 import orjson
 
-from ethhelper.datatypes.base import HexBytes, IntStr
+from ethhelper.datatypes.base import (
+    HexBytes,
+    IntStr,
+)
 
 T = TypeVar("T", IntStr, HexBytes)
 

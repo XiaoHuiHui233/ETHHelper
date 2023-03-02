@@ -1,6 +1,10 @@
-from logging import Logger
+from logging import (
+    Logger,
+)
 
-from .base import GethHttpWeb3
+from .base import (
+    GethHttpWeb3,
+)
 
 
 class GethNetHttp(GethHttpWeb3):

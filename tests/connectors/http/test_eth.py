@@ -1,14 +1,26 @@
 import logging
+from logging import (
+    FileHandler,
+    Formatter,
+)
 import os
-from logging import FileHandler, Formatter
 
 import dotenv
+from eth_typing import (
+    BlockNumber,
+    ChecksumAddress,
+)
 import pytest
-from eth_typing import BlockNumber, ChecksumAddress
-from web3 import Web3
-from web3.types import Nonce
+from web3 import (
+    Web3,
+)
+from web3.types import (
+    Nonce,
+)
 
-from ethhelper import GethHttpConnector
+from ethhelper import (
+    GethHttpConnector,
+)
 from ethhelper.types import (
     Address,
     CallOverrideParams,
@@ -16,7 +28,7 @@ from ethhelper.types import (
     Hash32,
     HexBytes,
     TxParams,
-    Wei
+    Wei,
 )
 
 dotenv.load_dotenv()

@@ -1,21 +1,34 @@
 
-import abc
+from abc import (
+    ABCMeta,
+    abstractmethod,
+)
 import asyncio
+from asyncio import (
+    CancelledError,
+    Task,
+)
+from logging import (
+    Logger,
+)
 import traceback
-from abc import ABCMeta
-from asyncio import CancelledError, Task
-from logging import Logger
-from typing import Any
+from typing import (
+    Any,
+)
 
-from pydantic import ValidationError
-from websockets import client
+from pydantic import (
+    ValidationError,
+)
+from websockets import (
+    client,
+)
 
 from ethhelper.datatypes.geth import (
     GethError,
     GethErrorResponse,
     GethRequest,
     GethSuccessResponse,
-    GethWSResponse
+    GethWSResponse,
 )
 
 
@@ -73,11 +86,11 @@ class GethSubsriber(metaclass=ABCMeta):
     async def subscribe(self, param: str) -> int:
         return await self.send("eth_subscribe", [param])
 
-    @abc.abstractmethod
+    @abstractmethod
     async def after_connection(self) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     async def handle(self, data: GethWSResponse | GethSuccessResponse) -> None:
         raise NotImplementedError
 

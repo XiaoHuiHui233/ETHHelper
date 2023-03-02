@@ -1,11 +1,23 @@
-from typing import Any
+from typing import (
+    Any,
+)
 
-from eth_typing import Address as Web3Address
-from pydantic import validator
-from web3.types import ENS
-from web3.types import BlockIdentifier as Web3BlockIdentifier
+from eth_typing import (
+    Address as Web3Address,
+)
+from pydantic import (
+    validator,
+)
+from web3.types import (
+    ENS,
+    BlockIdentifier as Web3BlockIdentifier,
+)
 
-from ethhelper.datatypes.base import Address, BlockIdentifier, Hash32
+from ethhelper.datatypes.base import (
+    Address,
+    BlockIdentifier,
+    Hash32,
+)
 
 Validator = Any
 

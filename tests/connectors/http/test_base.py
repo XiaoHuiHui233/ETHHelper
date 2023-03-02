@@ -1,11 +1,16 @@
 import logging
+from logging import (
+    FileHandler,
+    Formatter,
+)
 import os
-from logging import FileHandler, Formatter
 
 import dotenv
 import pytest
 
-from ethhelper import GethHttpConnector
+from ethhelper import (
+    GethHttpConnector,
+)
 
 dotenv.load_dotenv()
 
