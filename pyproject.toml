@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "ethhelper"
-version = "0.1.16"
+version = "0.1.17"
 description = "Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py. Geth node and Ethereum type extension based on pydantic."
 authors = ["XiaoHuiHui233 <1025184872@qq.com>"]
 license = "Apache-2.0"
@@ -13,10 +13,10 @@ repository = "https://github.com/XiaoHuiHui233/ETHHelper"
 keywords = ["ethereum", "asyncio", "geth", "pydantic"]
 
 [tool.poetry.dependencies]
-eth-typing = "^3.2.0"
+eth-typing = "^3.3.0"
 httpx = "^0.23.3"
 orjson = "^3.8.7"
-pydantic = "^1.10.5"
+pydantic = "^1.10.6"
 python = "^3.10"
 web3 = "^6.0.0-beta.11"
 websockets = "^10.4"
@@ -24,8 +24,8 @@ websockets = "^10.4"
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
 isort = "^5.12.0"
-mypy = "^1.0.1"
-pytest = "^7.2.1"
+mypy = "^1.1.1"
+pytest = "^7.2.2"
 pytest-asyncio = "^0.20.3"
 python-dotenv = "^1.0.0"
 ruff = "^0.0.253"
