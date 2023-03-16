@@ -748,14 +748,14 @@ test = ["hypothesis (>=4.43.0,<5.0.0)", "pytest (>=6.2.5,<7)", "pytest-xdist", "
 
 [[package]]
 name = "exceptiongroup"
-version = "1.1.0"
+version = "1.1.1"
 description = "Backport of PEP 654 (exception groups)"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "exceptiongroup-1.1.0-py3-none-any.whl", hash = "sha256:327cbda3da756e2de031a3107b81ab7b3770a602c4d16ca618298c526f4bec1e"},
-    {file = "exceptiongroup-1.1.0.tar.gz", hash = "sha256:bcb67d800a4497e1b404c2dd44fca47d3b7a5e5433dbab67f96c1a685cdfdf23"},
+    {file = "exceptiongroup-1.1.1-py3-none-any.whl", hash = "sha256:232c37c63e4f682982c8b6459f33a8981039e5fb8756b2074364e5055c498c9e"},
+    {file = "exceptiongroup-1.1.1.tar.gz", hash = "sha256:d484c3090ba2889ae2928419117447a14daf3c1231d5e30d0aae34f354f01785"},
 ]
 
 [package.extras]
@@ -1269,14 +1269,14 @@ regex = ">=2022.3.15"
 
 [[package]]
 name = "pathspec"
-version = "0.11.0"
+version = "0.11.1"
 description = "Utility library for gitignore style pattern matching of file paths."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pathspec-0.11.0-py3-none-any.whl", hash = "sha256:3a66eb970cbac598f9e5ccb5b2cf58930cd8e3ed86d393d541eaf2d8b1705229"},
-    {file = "pathspec-0.11.0.tar.gz", hash = "sha256:64d338d4e0914e91c1792321e6907b5a593f1ab1851de7fc269557a21b30ebbc"},
+    {file = "pathspec-0.11.1-py3-none-any.whl", hash = "sha256:d8af70af76652554bd134c22b3e8a1cc46ed7d91edcdd721ef1a0c51a84a5293"},
+    {file = "pathspec-0.11.1.tar.gz", hash = "sha256:2798de800fa92780e33acca925945e9a19a133b715067cf165b8866c15a31687"},
 ]
 
 [[package]]
@@ -1803,14 +1803,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "web3"
-version = "6.0.0b11"
+version = "6.0.0"
 description = "web3.py"
 category = "main"
 optional = false
 python-versions = ">=3.7.2"
 files = [
-    {file = "web3-6.0.0b11-py3-none-any.whl", hash = "sha256:31947e15dec29d380de10b5429905ac519ae74219dd05379e9854ee44f178d86"},
-    {file = "web3-6.0.0b11.tar.gz", hash = "sha256:810d797bc39f7705029e78303ca4f679fce75f60568faa5c750bc8f54eb70bfc"},
+    {file = "web3-6.0.0-py3-none-any.whl", hash = "sha256:abdeabec4c68e42caf2cc69eb0af026e0e15880ed9c514addfd2c363baae846f"},
+    {file = "web3-6.0.0.tar.gz", hash = "sha256:6b925a19e4a0001337d8b2faa72577d6b7e8f9a8a9a0b98d8834cdf698cfc045"},
 ]
 
 [package.dependencies]
@@ -2006,4 +2006,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b29c81f51a23fac48c3db64b3fab33db4c9d1a6c22da54bc82e220a976b253bf"
+content-hash = "5f53db9e59579800a1b8a77ab5c8edcd5051d18abea363e4ad01829e9f2fec08"
