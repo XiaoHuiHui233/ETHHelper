@@ -1,3 +1,14 @@
+v0.2.0
+
+修复FilterParams中topics会提供给web3 bytes类型的bug
+修复FilterParams中block_hash的类型应该是Hash32而不是HexBytes的bug
+添加对FilterParams中block_hash和from_block/to_block冲突的判断
+修复WS接口的名称拼写错误
+删除SyncStatus中已确定Geth不提供的属性
+添加GethCustomHttp以提供一些额外的常用能力接口
+添加等待节点同步到WS的订阅器，现在节点正在同步中的时候不会推送同步到的新块
+
+-------------------------------------------------------------------------------
 v0.1.18
 
 更新web3到6.0.0

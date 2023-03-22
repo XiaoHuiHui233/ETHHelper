@@ -1,3 +1,14 @@
+v0.2.0
+
+Fixed the bug that topics in FilterParams provided to web3 use hex str instead of bytes
+Fixed the bug that the type of block_hash in FilterParams should be Hash32 instead of HexBytes
+Added judgment on conflict between block_hash and from_block/to_block in FilterParams
+Fixed typo in name of WS interface
+Removed properties in SyncStatus that Geth has determined not to provide
+Added GethCustomHttp to provide some additional common capability interfaces
+Added waiting for the node to synchronize to WS, now the node will not push the new block to be synchronized when the node is synchronizing
+
+-------------------------------------------------------------------------------
 v0.1.18
 
 Updated web3 to 6.0.0

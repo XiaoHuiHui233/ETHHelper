@@ -32,7 +32,7 @@ from ethhelper.datatypes.geth import (
 )
 
 
-class GethSubsriber(metaclass=ABCMeta):
+class GethSubscriber(metaclass=ABCMeta):
     def __init__(self, url: str, logger: Logger) -> None:
         self.url = url
         self.logger = logger
@@ -51,8 +51,18 @@ class GethSubsriber(metaclass=ABCMeta):
             self.id = 0
             try:
                 async with client.connect(self.url) as self.ws:
+                    self.recv_loop = asyncio.create_task(self._recieve_loop())
                     await self.after_connection()
-                    await self._recieve_loop()
+                    await self.recv_loop
+                    exce = self.recv_loop.exception()
+                    if exce is not None:
+                        self.logger.warning(
+                            "Error when recv in Websocket. Retry is 5s."
+                        )
+                        self.logger.debug(
+                            f"Details: {traceback.format_exception(exce)}"
+                        )
+                        await asyncio.sleep(5)
             except Exception:
                 self.logger.warning(
                     "Websocket connection is dead. Retry is 5s."
@@ -101,6 +111,7 @@ class GethSubsriber(metaclass=ABCMeta):
         if self.run_task is None:
             return
         await self.ws.close()
+        self.recv_loop.cancel()
         self.run_task.cancel()
         try:
             await self.run_task

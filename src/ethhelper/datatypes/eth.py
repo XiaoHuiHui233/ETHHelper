@@ -53,8 +53,6 @@ AccessList = NewType("AccessList", Sequence[AccessEntry])
 class SyncStatus(BaseModel):
     current_block: int = Field(alias="currentBlock")
     highest_block: int = Field(alias="highestBlock")
-    known_states: int = Field(alias="knownStates")
-    pulled_states: int = Field(alias="pulledStates")
     starting_block: int = Field(alias="startingBlock")
 
     class Config:
@@ -301,9 +299,9 @@ class Receipt(BaseModel):
 
 class FilterParams(BaseModel):
     address: Address | list[Address] | None = None
-    block_hash: HexBytes | None = Field(None, alias="blockHash")
-    from_block: BlockIdentifier = Field("latest", alias="fromBlock")
-    to_block: BlockIdentifier = Field("latest", alias="toBlock")
+    block_hash: Hash32 | None = Field(None, alias="blockHash")
+    from_block: BlockIdentifier | None = Field(None, alias="fromBlock")
+    to_block: BlockIdentifier | None = Field(None, alias="toBlock")
     topics: Sequence[Hash32 | Sequence[Hash32]] | None = None
 
     def to_web3(self) -> Web3FilterParams:
@@ -315,11 +313,20 @@ class FilterParams(BaseModel):
                 td["address"] = typing.cast(list[Address], td["address"])
                 td["address"] = [addr.to_web3() for addr in td["address"]]
         if "blockHash" in td:
-            td["blockHash"] = typing.cast(HexBytes, td["blockHash"]).value
+            td["blockHash"] = str(typing.cast(Hash32, td["blockHash"]))
+            if "fromBlock" in td or "toBlock" in td:
+                raise ValueError(
+                    "You should only choose one of blockHash or "
+                    "fromBlock/toBlock as filter params"
+                )
         if "fromBlock" in td:
             td["fromBlock"] = convert.block_id_transfer(td["fromBlock"])
+            if "toBlock" not in td:
+                td["toBlock"] = "latest"
         if "toBlock" in td:
             td["toBlock"] = convert.block_id_transfer(td["toBlock"])
+            if "fromBlock" not in td:
+                td["fromBlock"] = "latest"
         if "topics" in td and len(td["topics"]) != 0:
             td["topics"] = typing.cast(
                 Sequence[Hash32 | Sequence[Hash32]], td["topics"]
@@ -329,11 +336,11 @@ class FilterParams(BaseModel):
                     Sequence[Sequence[Hash32]], td["topics"]
                 )
                 td["topics"] = [
-                    [top2.to_web3() for top2 in top1] for top1 in td["topics"]
+                    [str(top2) for top2 in top1] for top1 in td["topics"]
                 ]
             else:
                 td["topics"] = typing.cast(Sequence[Hash32], td["topics"])
-                td["topics"] = [top.to_web3() for top in td["topics"]]
+                td["topics"] = [str(top) for top in td["topics"]]
         return typing.cast(Web3FilterParams, td)
 
     class Config:

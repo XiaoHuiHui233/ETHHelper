@@ -31,6 +31,10 @@ class IdNotMatch(Exception):
     pass
 
 
+class GethIsDead(Exception):
+    pass
+
+
 class NoSubscribeToken(Exception):
     pass
 

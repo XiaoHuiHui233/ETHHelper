@@ -11,7 +11,7 @@ import dotenv
 import pytest
 
 from ethhelper import (
-    GethNewBlockSubsriber,
+    GethNewBlockSubscriber,
 )
 from ethhelper.types import (
     Block,
@@ -28,7 +28,7 @@ logger.addHandler(fh)
 logger.setLevel(logging.DEBUG)
 
 
-class MySubscriber(GethNewBlockSubsriber):
+class MySubscriber(GethNewBlockSubscriber):
     def __init__(self, url: str, logger: Logger) -> None:
         super().__init__(url, logger)
 
