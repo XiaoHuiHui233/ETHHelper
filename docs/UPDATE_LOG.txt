@@ -1,3 +1,10 @@
+v0.2.1
+
+Added ability to aggregate requests
+Added ability to get a series of consecutive blocks
+Migrated the direct query interface of logs from eth to custom
+
+-------------------------------------------------------------------------------
 v0.2.0
 
 Fixed the bug that topics in FilterParams provided to web3 use hex str instead of bytes

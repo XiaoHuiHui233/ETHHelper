@@ -80,10 +80,13 @@ class GethErrorDetail(BaseModel):
 
 
 class GethError(Exception):
-    def __init__(self, error: GethErrorDetail) -> None:
-        self.code = error.code
-        self.msg = error.message
-        super().__init__(f"{error.code}: {error.message}")
+    def __init__(self, error: GethErrorDetail | list[GethErrorDetail]) -> None:
+        if isinstance(error, list):
+            super().__init__([f"{err.code}: {err.message}" for err in error])
+        else:
+            self.code = error.code
+            self.msg = error.message
+            super().__init__(f"{error.code}: {error.message}")
 
 
 class GethErrorResponse(BaseModel):
@@ -97,6 +100,9 @@ class GethErrorResponse(BaseModel):
         frozen = True
         json_loads = orjson.loads
         json_dumps = json.orjson_dumps
+
+
+GethResponse = GethSuccessResponse | GethErrorResponse
 
 
 class GethWSItem(BaseModel):

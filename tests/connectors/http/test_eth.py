@@ -24,7 +24,6 @@ from ethhelper import (
 from ethhelper.types import (
     Address,
     CallOverrideParams,
-    FilterParams,
     Hash32,
     HexBytes,
     TxParams,
@@ -184,15 +183,3 @@ class TestHttpEth:
             )
         )
         logger.info(receipt.transaction_hash)
-
-    async def test_case12(self) -> None:
-        height = await connector.eth_block_number()
-        logs = await connector.get_logs(
-            FilterParams(  # type: ignore
-                address=Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
-                fromBlock=height-1000,
-                toBlock=height,
-            )
-        )
-        for log in logs:
-            logger.info(f"{log.block_number}, {log.log_index}")

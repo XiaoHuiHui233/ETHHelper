@@ -30,7 +30,6 @@ from ethhelper.datatypes.eth import (
     Block,
     FeeHistory,
     FilterParams,
-    Log,
     Receipt,
     SyncStatus,
     Transaction,
@@ -263,9 +262,3 @@ class GethEthHttp(GethHttpWeb3):
     async def eth_uninstall_filter(self, filter: AsyncFilter) -> bool:
         assert filter.filter_id is not None
         return await self.eth.uninstall_filter(filter.filter_id)
-
-    async def get_logs(self, filter: FilterParams) -> list[Log]:
-        async_filter = await self.eth_filter(filter)
-        logs = await async_filter.get_all_entries()
-        await self.eth_uninstall_filter(async_filter)
-        return [Log.parse_obj(log) for log in logs]

@@ -13,6 +13,7 @@ from typing import (
 from httpx import (
     AsyncClient,
 )
+import orjson
 from pydantic import (
     ValidationError,
 )
@@ -25,8 +26,12 @@ from ethhelper.datatypes.geth import (
     GethError,
     GethErrorResponse,
     GethRequest,
+    GethResponse,
     GethSuccessResponse,
     IdNotMatch,
+)
+from ethhelper.utils import (
+    json,
 )
 
 
@@ -45,6 +50,41 @@ class GethHttpCustomized(GethHttpAbstract):
         super().__init__(url, logger)
         self.id = 0
 
+    def parse_response(self, raw_res: str) -> GethResponse:
+        try:
+            response = GethSuccessResponse.parse_raw(raw_res)
+        except ValidationError:
+            response = GethErrorResponse.parse_raw(raw_res)
+        self.logger.debug(f"RECV {response}")
+        return response
+
+    def parse_multiple_responses(
+        self, raw_res: str
+    ) -> tuple[list[GethSuccessResponse], list[GethErrorResponse]]:
+        raw_res_list = orjson.loads(raw_res)
+        success: list[GethSuccessResponse] = []
+        errors: list[GethErrorResponse] = []
+        for res in raw_res_list:
+            try:
+                response = GethSuccessResponse.parse_obj(res)
+                success.append(response)
+            except ValidationError:
+                response = GethErrorResponse.parse_obj(res)
+                errors.append(response)
+        self.logger.debug(f"RECV MULTIPLE {success} {errors}")
+        return success, errors
+
+    async def send_raw(self, raw: str) -> str:
+        self.logger.debug(f"SEND RAW {raw}")
+        async with AsyncClient() as client:
+            res = await client.post(
+                f"{self.url}",
+                content=raw,
+                headers={"Content-Type": "application/json"}
+            )
+            self.logger.debug(f"RECV RAW {res.text}")
+            return res.text
+
     async def send(self, method: str, params: list[Any] | None = None) -> Any:
         if params is None:
             params = []
@@ -54,24 +94,33 @@ class GethHttpCustomized(GethHttpAbstract):
         self.id += 1
         id = self.id
         request = GethRequest(id=id, method=method, params=params)
-        async with AsyncClient() as client:
-            res = await client.post(
-                f"{self.url}",
-                content=request.json(),
-                headers={"Content-Type": "application/json"}
+        raw_res = await self.send_raw(request.json())
+        response = self.parse_response(raw_res)
+        if isinstance(response, GethErrorResponse):
+            raise GethError(error=response.error)
+        if id != response.id:
+            raise IdNotMatch(
+                f"Send id {id} but received {response.id}"
             )
-            self.logger.debug(f"RECV {res.text}")
-            response: GethSuccessResponse | GethErrorResponse
-            try:
-                response = GethSuccessResponse.parse_raw(res.text)
-                if id != response.id:
-                    raise IdNotMatch(
-                        f"Send id {id} but received {response.id}"
-                    )
-            except ValidationError:
-                response = GethErrorResponse.parse_raw(res.text)
-                raise GethError(error=response.error)
-            return response.result
+        return response.result
+
+    async def send_multiple(
+        self, raw_requests: list[tuple[str, list[Any] | None]]
+    ) -> tuple[list[GethSuccessResponse], list[GethErrorResponse]]:
+        self.logger.debug(f"SEND MULTIPLE {raw_requests}")
+        requests: list[GethRequest] = []
+        for method, params in raw_requests:
+            if self.id >= 100000000:
+                self.id = 0
+            self.id += 1
+            if params is None:
+                params = []
+            req = GethRequest(id=self.id, method=method, params=params)
+            requests.append(req)
+        raw_res = await self.send_raw(
+            json.orjson_dumps([req.dict() for req in requests])
+        )
+        return self.parse_multiple_responses(raw_res)
 
     async def is_connected(self) -> bool:
         try:
