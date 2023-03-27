@@ -51,8 +51,8 @@ class TestHttpCustom:
         logger.info(f"{len(logs)}")
 
     async def test_case2(self) -> None:
-        height = await connector.get_height_after_dt(
-            datetime(2023, 3, 21, 16, 14)
+        height = await connector.get_height_after_ts(
+            int(datetime(2023, 3, 21, 16, 14).timestamp())
         )
         logger.info(height)
         assert height == 16874761

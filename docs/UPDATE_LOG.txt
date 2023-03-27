@@ -1,3 +1,8 @@
+v0.2.2
+
+Used timestamp instead of datetime for time calculation
+
+-------------------------------------------------------------------------------
 v0.2.1
 
 Added ability to aggregate requests
