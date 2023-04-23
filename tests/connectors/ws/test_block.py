@@ -41,7 +41,7 @@ class MySubscriber(GethNewBlockSubscriber):
 class TestHttpBase:
     async def test_case1(self) -> None:
         host = os.getenv("HOST", "localhost")
-        port = int(os.getenv("wS_PORT", "8546"))
+        port = int(os.getenv("WS_PORT", "8546"))
         subscriber = MySubscriber(f"ws://{host}:{port}/", logger)
         await subscriber.bind()
         await asyncio.sleep(24)

@@ -1,8 +1,10 @@
 # ETHHelper
 
+[![license](https://img.shields.io/github/license/XiaoHuiHui233/ETHHelper)](https://github.com/XiaoHuiHui233/ETHHelper/blob/main/LICENSE)
+
 Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py. Geth node and Ethereum type extension based on pydantic.
 
-[Chinese](docs/README_cn.md) | English
+[中文](docs/README_cn.md) | English
 
 ## Usage
 

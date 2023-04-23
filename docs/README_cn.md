@@ -2,7 +2,7 @@
 
 基于httpx、websockets以及web3.py的异步Geth节点连接封装。基于pydantic的Geth节点和以太坊类型扩展。
 
-中文 | [英文](README.md)
+中文 | [English](README.md)
 
 ## 用法
 

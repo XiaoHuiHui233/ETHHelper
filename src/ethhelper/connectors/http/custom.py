@@ -37,10 +37,29 @@ from .txpool import (
 
 
 class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
+    """A customized HTTP interface for Geth nodes that inherits from
+    ``GethEthHttp``, ``GethNetHttp``, and ``GethTxpoolHttp``. Provides
+    additional functionalities to access Geth nodes via HTTP.
+
+    The ``url`` is used to indicate the path of the HTTP service of the Geth
+    node, usually in the form of ``http://host:port/``. The use of third-party
+    nodes may be out of the ordinary.
+
+    The ``logger`` is used to assign a logger of the Python logging module to
+    this class. Explicitly assigning a logger can be used to control the output
+    location of the logger, which is convenient for debugging.
+    """
     def __init__(self, url: str, logger: Logger) -> None:
         super().__init__(url, logger)
 
     async def test_connection(self) -> bool:
+        """Test connectivity to the Geth node via both Web3.py and the
+        customized HTTP interface.
+
+        Returns:
+            A bool indicating whether the connection to the Geth node is
+            successful or not.
+        """
         try:
             web3 = await self.is_connected()
             customized = await super(GethTxpoolHttp, self).is_connected()
@@ -54,6 +73,21 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
             return False
     
     async def get_logs(self, filter: FilterParams) -> list[Log]:
+        """Retrieve a list of logs from the Geth node using the given
+        ``FilterParams``.
+
+        Args:
+            filter: A FilterParams object used to specify filter parameters for
+                the logs.
+
+        Returns:
+            A list of Log objects parsed from the logs returned by the Geth
+            node.
+
+        Raises:
+            ethhelper.types.GethError: Raised when the Geth node returns an
+                error.
+        """
         async_filter = await self.eth_filter(filter)
         logs = await async_filter.get_all_entries()
         await self.eth_uninstall_filter(async_filter)
@@ -66,6 +100,24 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
         address: Address | list[Address] | None = None,
         topics: Sequence[Hash32 | Sequence[Hash32]] | None = None
     ) -> list[Log]:
+        """Retrieve a list of logs within a range of blocks specified by block
+        heights.
+
+        Args:
+            start_height: The block height to start retrieving logs from.
+            end_height: The block height to stop retrieving logs from.
+            address: An address or list of addresses to filter the logs by.
+            topics: A list of topics or nested lists of topics to filter the
+                logs by.
+
+        Returns:
+            A list of Log objects parsed from the logs returned by the Geth
+            node.
+
+        Raises:
+            ethhelper.types.GethError: Raised when the Geth node returns an
+                error.
+        """
         if end_height - start_height > 200:
             results: list[Log] = []
             for i in range(start_height, end_height + 1, 201):
@@ -90,6 +142,19 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
     async def _binary_search(
         self, start: BlockNumber, end: BlockNumber, target: int
     ) -> BlockNumber:
+        """
+        Perform binary search to find the block height which is closest to the
+        target timestamp.
+
+        Args:
+            start: The start block height to search from.
+            end: The end block height to search to.
+            target: The target timestamp to search for.
+
+        Returns:
+            A ``BlockNumber`` instance that represents the block height which
+            is closest to the target timestamp.
+        """
         middle = (start + end) // 2
         ts = (await self.eth_get_block(BlockNumber(middle))).timestamp
         if end - start <= 1:
@@ -107,6 +172,16 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
             return await self._binary_search(BlockNumber(middle), end, target)
 
     async def get_height_after_ts(self, timestamp: int) -> BlockNumber:
+        """
+        Get the block height closest to the target timestamp.
+
+        Args:
+            timestamp: The target timestamp in seconds since the epoch.
+
+        Returns:
+            A ``BlockNumber`` instance that represents the block height closest
+            to the target timestamp.
+        """
         height_now: int = await self.eth_block_number()
         ts_now = int(datetime.now().timestamp())
         td = ts_now - timestamp
@@ -119,6 +194,17 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
     async def get_blocks_by_numbers(
         self, start: BlockNumber, end: BlockNumber
     ) -> list[Block]:
+        """
+        Get the blocks with the given block numbers.
+
+        Args:
+            start: The start block number.
+            end: The end block number.
+
+        Returns:
+            A list of ``Block`` instances that represent the blocks with the
+            given block numbers.
+        """
         if end - start > 200:
             results: list[Block] = []
             for i in range(start, end + 1, 201):

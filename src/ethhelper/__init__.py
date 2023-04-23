@@ -1,4 +1,4 @@
-from .connnectors.http import GethHttpConnector
-from .connnectors.ws.block import GethNewBlockSubscriber
+from .connectors.http import GethHttpConnector
+from .connectors.ws import GethNewBlockSubscriber
 
 __all__ = ["GethHttpConnector", "GethNewBlockSubscriber"]
