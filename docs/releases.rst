@@ -1,6 +1,25 @@
 Release Notes
 =============
 
+v0.3.2 (2023-04-24)
+-------------------
+
+Features
+~~~~~~~~
+
+- Added auto publish to github workflow
+
+Release Notes
+=============
+
+v0.3.1 (2023-04-24)
+-------------------
+
+Features
+~~~~~~~~
+
+- Added pypi release
+
 v0.3.0 (2023-04-23)
 -------------------
 

@@ -39,3 +39,9 @@ jobs:
       with:
         release_id: ${{ steps.create_release.outputs.id }}
         assets_path: dist
+    - name: Publish
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        poetry publish -u $TWINE_USERNAME -p $TWINE_PASSWORD
