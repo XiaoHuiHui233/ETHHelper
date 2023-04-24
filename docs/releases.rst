@@ -1,11 +1,22 @@
 Release Notes
 =============
 
+v0.3.3 (2023-04-24)
+-------------------
+
+Improved Documentation
+~~~~~~~~~~~~~~~~~~~~~~
+
+- Added Build Status to README
+- Added Python Version to README
+- Added Wheel Status to README
+- Added Latest Version to README
+
 v0.3.2 (2023-04-24)
 -------------------
 
-Features
-~~~~~~~~
+Miscellaneous changes
+~~~~~~~~~~~~~~~~~~~~~
 
 - Added auto publish to github workflow
 
@@ -15,8 +26,14 @@ Release Notes
 v0.3.1 (2023-04-24)
 -------------------
 
-Features
-~~~~~~~~
+Improved Documentation
+~~~~~~~~~~~~~~~~~~~~~~
+
+- Added pypi install guide to README
+- Added Documentation Status to README
+
+Miscellaneous changes
+~~~~~~~~~~~~~~~~~~~~~
 
 - Added pypi release
 
@@ -28,8 +45,8 @@ Bugfixes
 
 - Fixed typo ``ethhelper.connnectors`` to ``ethhelper.connectors``
 
-Features
-~~~~~~~~
+Improved Documentation
+~~~~~~~~~~~~~~~~~~~~~~
 
 - Added full read-the-docs style documentation
 

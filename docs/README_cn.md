@@ -1,5 +1,12 @@
 # ETHHelper
 
+[![Build Status](https://img.shields.io/github/actions/workflow/status/XiaoHuiHui233/ETHHelper/publish.yml)]
+[![Documentation Status](https://readthedocs.org/projects/ethhelper/badge/?version=latest)](https://ethhelper.readthedocs.io/en/latest/?badge=latest)
+[![Python Version](https://img.shields.io/pypi/pyversions/ethhelper)]
+[![Wheel Status](https://img.shields.io/pypi/wheel/ethhelper)]
+[![Latest Version](https://img.shields.io/github/v/release/XiaoHuiHui233/ETHHelper)]
+[![License](https://img.shields.io/github/license/XiaoHuiHui233/ETHHelper)](https://github.com/XiaoHuiHui233/ETHHelper/blob/main/LICENSE)
+
 基于httpx、websockets以及web3.py的异步Geth节点连接封装。基于pydantic的Geth节点和以太坊类型扩展。
 
 快速开始见[此](https://ethhelper.readthedocs.io/en/latest/quickstart.html)。
