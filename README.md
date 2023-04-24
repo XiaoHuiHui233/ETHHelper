@@ -1,10 +1,10 @@
 # ETHHelper
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/XiaoHuiHui233/ETHHelper/publish.yml)]
+[![Build Status](https://img.shields.io/github/actions/workflow/status/XiaoHuiHui233/ETHHelper/publish.yml)](https://github.com/XiaoHuiHui233/ETHHelper/actions)
 [![Documentation Status](https://readthedocs.org/projects/ethhelper/badge/?version=latest)](https://ethhelper.readthedocs.io/en/latest/?badge=latest)
-[![Python Version](https://img.shields.io/pypi/pyversions/ethhelper)]
-[![Wheel Status](https://img.shields.io/pypi/wheel/ethhelper)]
-[![Latest Version](https://img.shields.io/github/v/release/XiaoHuiHui233/ETHHelper)]
+![Python Version](https://img.shields.io/pypi/pyversions/ethhelper)
+![Wheel Status](https://img.shields.io/pypi/wheel/ethhelper)
+[![Latest Version](https://img.shields.io/github/v/release/XiaoHuiHui233/ETHHelper)](https://github.com/XiaoHuiHui233/ETHHelper/releases)
 [![License](https://img.shields.io/github/license/XiaoHuiHui233/ETHHelper)](https://github.com/XiaoHuiHui233/ETHHelper/blob/main/LICENSE)
 
 Asynchronous Geth node connection encapsulation based on httpx, websockets and web3.py. Geth node and Ethereum type extension based on pydantic.
