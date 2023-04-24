@@ -1,13 +1,21 @@
 Release Notes
 =============
 
+v0.3.5
+-------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed typo in ``Release Notes``
+
 v0.3.4 (2023-04-24)
 -------------------
 
 Bugfixes
 ~~~~~~~~
 
-- Fixed typo in README
+- Fixed typo in ``README``
 
 v0.3.3 (2023-04-24)
 -------------------
@@ -15,10 +23,10 @@ v0.3.3 (2023-04-24)
 Improved Documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- Added Build Status to README
-- Added Python Version to README
-- Added Wheel Status to README
-- Added Latest Version to README
+- Added ``Build Status`` to ``README``
+- Added ``Python Version`` to ``README``
+- Added ``Wheel Status`` to ``README``
+- Added ``Latest Version`` to ``README``
 
 v0.3.2 (2023-04-24)
 -------------------
@@ -28,17 +36,14 @@ Miscellaneous changes
 
 - Added auto publish to github workflow
 
-Release Notes
-=============
-
 v0.3.1 (2023-04-24)
 -------------------
 
 Improved Documentation
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- Added pypi install guide to README
-- Added Documentation Status to README
+- Added pypi install guide to ``README``
+- Added ``Documentation Status`` to ``README``
 
 Miscellaneous changes
 ~~~~~~~~~~~~~~~~~~~~~
