@@ -1,7 +1,17 @@
 Release Notes
 =============
 
-v0.3.5
+v0.3.6 (2023-05-09)
+-------------------
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- Updated ``orjson`` to 3.8.12
+- Updated ``web3`` to 6.3.0
+- Added ``sphinx`` dependency
+
+v0.3.5 (2023-04-24)
 -------------------
 
 Bugfixes
