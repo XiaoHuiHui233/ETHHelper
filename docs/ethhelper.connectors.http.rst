@@ -62,3 +62,10 @@ GethCustomHttp
 .. autoclass:: GethCustomHttp
     :members:
     :inherited-members:
+
+GethGraphQL
+--------------
+
+.. autoclass:: GethGraphQL
+    :members:
+    :inherited-members:

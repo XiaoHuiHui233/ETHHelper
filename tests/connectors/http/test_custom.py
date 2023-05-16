@@ -19,7 +19,7 @@ from ethhelper import (
 )
 from ethhelper.types import (
     Address,
-    FilterParams
+    FilterParams,
 )
 
 dotenv.load_dotenv()
@@ -58,14 +58,14 @@ class TestHttpCustom:
         assert height == 16874761
     
     async def test_case3(self) -> None:
-        blocks = await connector.get_blocks_by_numbers(
+        blocks = await connector.get_blocks_by_numbers_range(
             BlockNumber(16798774),
             BlockNumber(16798775)
         )
         assert len(blocks) == 2
     
     async def test_case4(self) -> None:
-        blocks = await connector.get_blocks_by_numbers(
+        blocks = await connector.get_blocks_by_numbers_range(
             BlockNumber(16798774),
             BlockNumber(16799185)
         )

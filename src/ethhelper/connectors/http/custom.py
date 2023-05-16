@@ -98,7 +98,8 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
         start_height: BlockNumber,
         end_height: BlockNumber,
         address: Address | list[Address] | None = None,
-        topics: Sequence[Hash32 | Sequence[Hash32]] | None = None
+        topics: Sequence[Hash32 | Sequence[Hash32]] | None = None,
+        step: int = 200
     ) -> list[Log]:
         """Retrieve a list of logs within a range of blocks specified by block
         heights.
@@ -109,6 +110,8 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
             address: An address or list of addresses to filter the logs by.
             topics: A list of topics or nested lists of topics to filter the
                 logs by.
+            step: The maximum number of blocks per request, preventing a single
+                request from requiring too much memory and taking too long.
 
         Returns:
             A list of Log objects parsed from the logs returned by the Geth
@@ -118,19 +121,24 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
             ethhelper.types.GethError: Raised when the Geth node returns an
                 error.
         """
-        if end_height - start_height > 200:
+        if end_height - start_height > step:
             results: list[Log] = []
-            for i in range(start_height, end_height + 1, 201):
-                if i + 200 > end_height:
+            self.logger.info(
+                f"Try to get logs from {start_height} to {end_height}, "
+                f"call per {step} blocks"
+            )
+            for i in range(start_height, end_height + 1, step + 1):
+                if i + step > end_height:
                     results += await self.get_logs_by_blocks(
                         BlockNumber(i), end_height, address, topics
                     )
                 else:
                     results += await self.get_logs_by_blocks(
-                        BlockNumber(i), BlockNumber(i + 200), address, topics
+                        BlockNumber(i), BlockNumber(i + step), address, topics
                     )
             return results
         else:
+            self.logger.info(f"Get logs from {start_height} to {end_height}")
             fliter_params = FilterParams(  # type: ignore
                 address = address,
                 from_block = start_height,  # type: ignore
@@ -190,38 +198,67 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
         return await self._binary_search(
             BlockNumber(pos_lower), BlockNumber(pos_upper), timestamp
         )
-    
+
     async def get_blocks_by_numbers(
-        self, start: BlockNumber, end: BlockNumber
+        self, numbers: list[BlockNumber], step: int = 200
     ) -> list[Block]:
         """
         Get the blocks with the given block numbers.
 
         Args:
-            start: The start block number.
-            end: The end block number.
+            numbers: The block numbers.
+            step: The maximum number of blocks per request, preventing a single
+                request from requiring too much memory and taking too long.
 
         Returns:
             A list of ``Block`` instances that represent the blocks with the
             given block numbers.
         """
-        if end - start > 200:
+        if len(numbers) > step:
             results: list[Block] = []
-            for i in range(start, end + 1, 201):
-                if i + 200 > end:
+            self.logger.info(
+                f"Try to get {len(numbers)} blocks, call per {step} blocks"
+            )
+            for i in range(0, len(numbers), step):
+                if i + step > len(numbers):
                     results += await self.get_blocks_by_numbers(
-                        BlockNumber(i), end
+                        numbers[i:]
                     )
+                    self.logger.info("Get blocks process: 100 %")
                 else:
                     results += await self.get_blocks_by_numbers(
-                        BlockNumber(i), BlockNumber(i + 200)
+                        numbers[i:i+step]
+                    )
+                    self.logger.info(
+                        "Get blocks process: "
+                        f"{((i + step)/len(numbers)*100):.2f} %"
                     )
             return results
         else:
             requests: list[tuple[str, list[Any] | None]] = []
-            for i in range(start, end + 1):
-                requests.append(("eth_getBlockByNumber", [hex(i), False]))
+            for number in numbers:
+                requests.append(("eth_getBlockByNumber", [hex(number), False]))
             success, errors = await self.send_multiple(requests)
             if len(errors) != 0:
                 raise GethError(error=[err.error for err in errors])
             return [Block.parse_obj(suc.result) for suc in success]
+
+    async def get_blocks_by_numbers_range(
+        self, start: BlockNumber, end: BlockNumber, step: int = 200
+    ) -> list[Block]:
+        """
+        Get the blocks with the given block numbers range.
+
+        Args:
+            start: The start block number.
+            end: The end block number.
+            step: The maximum number of blocks per request, preventing a single
+                request from requiring too much memory and taking too long.
+
+        Returns:
+            A list of ``Block`` instances that represent the blocks with the
+            given block numbers range.
+        """
+        return await self.get_blocks_by_numbers(
+            [BlockNumber(i) for i in range(start, end + 1, 1)], step
+        )

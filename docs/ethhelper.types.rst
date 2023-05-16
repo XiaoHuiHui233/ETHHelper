@@ -82,6 +82,9 @@ Geth
 .. autoclass:: GethError
     :members:
 
+.. autoclass:: GethGraphQLError
+    :members:
+
 .. autoclass:: GethErrorResponse
     :members:
 

@@ -116,6 +116,15 @@ class GethError(Exception):
             super().__init__(f"{error.code}: {error.message}")
 
 
+class GethGraphQLError(Exception):
+    """An exception representing an error response from the Geth graphql."""
+    def __init__(self, msgs: list[str], data: dict[str, Any]) -> None:
+        self.msgs = msgs
+        """The error messages."""
+        self.data = data
+        """The data received."""
+        super().__init__("\n".join(msgs))
+
 class GethErrorResponse(BaseModel):
     """A class representing an error response from the Geth client."""
     jsonrpc: str = "2.0"

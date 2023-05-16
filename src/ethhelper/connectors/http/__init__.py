@@ -14,6 +14,9 @@ from .custom import (
 from .eth import (
     GethEthHttp,
 )
+from .graphql import (
+    GethGraphQL,
+)
 from .net import (
     GethNetHttp,
 )
@@ -22,7 +25,7 @@ from .txpool import (
 )
 
 
-class GethHttpConnector(GethCustomHttp):
+class GethHttpConnector(GethGraphQL, GethCustomHttp):
     """``GethHttpConnector`` is an asynchronous wrapper for all HTTP interfaces
     supported by ETHHelper.
 
@@ -39,11 +42,21 @@ class GethHttpConnector(GethCustomHttp):
     parameter is not provided or ``None`` is giving, this class will
     automatically call ``logging.getLogger("GethHttpConnector")`` to generate a
     default logger.
+
+    The ``graphql_url`` is used to specify the URL for the GraphQL interface of
+    the Geth node, usually in the form of ``http://host:port/graphql``. If not
+    provided, it will generate from ``url`` by appending ``/graphql``.
     """
-    def __init__(self, url: str, logger: Logger | None = None) -> None:
+    def __init__(
+        self,
+        url: str,
+        logger: Logger | None = None,
+        graphql_url: str | None = None
+    ) -> None:
         if logger is None:
             logger = logging.getLogger("GethHttpConnector")
-        super().__init__(url, logger)
+        super().__init__(url, logger, graphql_url=graphql_url)
+
 
 
 __all__ = [
@@ -54,5 +67,6 @@ __all__ = [
     "GethEthHttp",
     "GethNetHttp",
     "GethTxpoolHttp",
-    "GethHttpConnector"
+    "GethHttpConnector",
+    "GethGraphQL"
 ]

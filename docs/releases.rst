@@ -1,6 +1,35 @@
 Release Notes
 =============
 
+v0.4.0 (2023-05-16)
+-------------------
+
+Features
+~~~~~~~~
+
+- Added ``GethGraphQL`` to provide lighter and faster information acquisition
+  capabilities.
+- Added ``GethGraphQL.get_block_ts_by_number`` to provide the ability to
+  quickly query a block timestamp
+- Added ``GethGraphQL.get_blocks_ts_by_numbers`` to provide the ability to
+  quickly query the timestamps of continuous blocks
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+- Renamed ``GethCustomHttp.get_blocks_by_numbers`` to 
+  ``get_blocks_by_numbers_range`` for continuous block fetching
+- Added new ``GethCustomHttp.get_blocks_by_numbers`` for non-continuous block
+  fetching by a list of block numbers
+- Added ``step`` parameter for ``GethCustomHttp.get_blocks_by_numbers`` and
+  ``GethCustomHttp.get_blocks_by_numbers_range`` for custom request size
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- Updated ``web3`` to 6.4.0
+- Fixed some code-style issues
+
 v0.3.6 (2023-05-09)
 -------------------
 
