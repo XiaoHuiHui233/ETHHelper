@@ -128,14 +128,13 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
                 f"call per {step} blocks"
             )
             for i in range(start_height, end_height + 1, step + 1):
-                if i + step > end_height:
-                    results += await self.get_logs_by_blocks(
-                        BlockNumber(i), end_height, address, topics
-                    )
-                else:
-                    results += await self.get_logs_by_blocks(
-                        BlockNumber(i), BlockNumber(i + step), address, topics
-                    )
+                results += await self.get_logs_by_blocks(
+                    BlockNumber(i),
+                    BlockNumber(min(end_height, i + step)),
+                    address,
+                    topics,
+                    step
+                )
             return results
         else:
             self.logger.info(f"Get logs from {start_height} to {end_height}")
@@ -220,19 +219,13 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
                 f"Try to get {len(numbers)} blocks, call per {step} blocks"
             )
             for i in range(0, len(numbers), step):
-                if i + step > len(numbers):
-                    results += await self.get_blocks_by_numbers(
-                        numbers[i:]
-                    )
-                    self.logger.info("Get blocks process: 100 %")
-                else:
-                    results += await self.get_blocks_by_numbers(
-                        numbers[i:i+step]
-                    )
-                    self.logger.info(
-                        "Get blocks process: "
-                        f"{((i + step)/len(numbers)*100):.2f} %"
-                    )
+                results += await self.get_blocks_by_numbers(
+                    numbers[i:min(i+step, len(numbers))], step
+                )
+                self.logger.info(
+                    "Get blocks process: "
+                    f"{((i + step)/len(numbers)*100):.2f} %"
+                )
             return results
         else:
             requests: list[tuple[str, list[Any] | None]] = []

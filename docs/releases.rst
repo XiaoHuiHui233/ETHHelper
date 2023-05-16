@@ -1,6 +1,20 @@
 Release Notes
 =============
 
+v0.4.1 (2023-05-16)
+-------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed a bug of ``step`` parameter, may cause death loop
+- Optimized logic of recursion call of ``GethCustomHttp``
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- Made ``GethGraphQLError`` exported due to be forgot by last commit
+
 v0.4.0 (2023-05-16)
 -------------------
 
