@@ -224,7 +224,7 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
                 )
                 self.logger.info(
                     "Get blocks process: "
-                    f"{((i + step)/len(numbers)*100):.2f} %"
+                    f"{(min(i+step, len(numbers))/len(numbers)*100):.2f} %"
                 )
             return results
         else:

@@ -131,21 +131,16 @@ class GethGraphQL(GethHttpAbstract):
                 f"Try to get {total + 1} blocks timestamp, "
                 f"call per {step} blocks"
             )
-            for i in range(from_height, to_height, 5001):
-                if i + step < to_height:
-                    result |= await self.get_blocks_ts_by_numbers_range(
-                        BlockNumber(i), BlockNumber(i + step)
-                    )
-                    self.logger.info(
-                        "Get blocks timestamp process: "
-                        f"{((i + step - from_height + 1)/(total + 1)*100):.2f}"
-                        " %"
-                    )
-                else:
-                    result |= await self.get_blocks_ts_by_numbers_range(
-                        BlockNumber(i), to_height
-                    )
-                    self.logger.info("Get blocks timestamp process: 100 %")
+            for i in range(from_height, to_height, step + 1):
+                result |= await self.get_blocks_ts_by_numbers_range(
+                    BlockNumber(i),
+                    BlockNumber(min(i+step, to_height)),
+                    step
+                )
+                process = (min(i+step, to_height)-from_height+1)/(total+1)*100
+                self.logger.info(
+                    f"Get blocks timestamp process: {process:.2f} %"
+                )
         else:
             query = """
             query {

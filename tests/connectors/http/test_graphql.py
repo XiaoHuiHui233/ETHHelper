@@ -49,3 +49,19 @@ class TestGraphQL:
             BlockNumber(16799185)
         )
         assert len(blocks) == 16799185 - 16798774 + 1
+    
+    async def test_case4(self) -> None:
+        blocks = await connector.get_blocks_ts_by_numbers_range(
+            BlockNumber(16798774),
+            BlockNumber(16799185),
+            step=20
+        )
+        assert len(blocks) == 16799185 - 16798774 + 1
+
+    async def test_case5(self) -> None:
+        blocks = await connector.get_blocks_ts_by_numbers_range(
+            BlockNumber(16798774),
+            BlockNumber(16799785),
+            step=400
+        )
+        assert len(blocks) == 16799785 - 16798774 + 1

@@ -1,6 +1,15 @@
 Release Notes
 =============
 
+v0.4.2 (2023-05-17)
+-------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed a bug of ``step`` parameter, may cause death loop in ``GethGraphQL``
+- Optimized logic of recursion call of ``GethGraphQL``
+
 v0.4.1 (2023-05-16)
 -------------------
 

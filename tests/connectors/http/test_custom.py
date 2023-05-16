@@ -72,9 +72,45 @@ class TestHttpCustom:
         assert len(blocks) == 16799185 - 16798774 + 1
     
     async def test_case5(self) -> None:
+        blocks = await connector.get_blocks_by_numbers_range(
+            BlockNumber(16798774),
+            BlockNumber(16799185),
+            step=20
+        )
+        assert len(blocks) == 16799185 - 16798774 + 1
+
+    async def test_case6(self) -> None:
+        blocks = await connector.get_blocks_by_numbers_range(
+            BlockNumber(16798774),
+            BlockNumber(16799785),
+            step=400
+        )
+        assert len(blocks) == 16799785 - 16798774 + 1
+    
+    async def test_case7(self) -> None:
         logs = await connector.get_logs_by_blocks(
             BlockNumber(16798774),
             BlockNumber(16799185),
             Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
         )
         logger.info(f"{len(logs)}")
+    
+    async def test_case8(self) -> None:
+        logs = await connector.get_logs_by_blocks(
+            BlockNumber(16798774),
+            BlockNumber(16799185),
+            Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
+            step=20
+        )
+        logger.info(f"{len(logs)}")
+    
+    async def test_case9(self) -> None:
+        logs = await connector.get_logs_by_blocks(
+            BlockNumber(16798774),
+            BlockNumber(16799785),
+            Address("0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8"),
+            step=400
+        )
+        logger.info(f"{len(logs)}")
+
+
