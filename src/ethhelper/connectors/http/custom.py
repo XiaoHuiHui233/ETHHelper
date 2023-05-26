@@ -191,9 +191,13 @@ class GethCustomHttp(GethEthHttp, GethNetHttp, GethTxpoolHttp):
         """
         height_now: int = await self.eth_block_number()
         ts_now = int(datetime.now().timestamp())
+        if timestamp >= ts_now:
+            return BlockNumber(height_now + 1)
         td = ts_now - timestamp
         pos_lower = height_now - (td // 12) - 5
         pos_upper = height_now - (td // 24) + 5
+        if pos_upper > height_now:
+            pos_upper = height_now
         return await self._binary_search(
             BlockNumber(pos_lower), BlockNumber(pos_upper), timestamp
         )

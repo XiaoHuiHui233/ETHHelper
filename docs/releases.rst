@@ -1,5 +1,13 @@
 Release Notes
 =============
+v0.4.3 (2023-05-26)
+-------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed a bug of ``get_height_after_ts`` may cause block not found due to the 
+  given timestamp is after the latest block
 
 v0.4.2 (2023-05-17)
 -------------------
